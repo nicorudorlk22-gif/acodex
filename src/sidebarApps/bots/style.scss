@@ -1,0 +1,231 @@
+.container.bots {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+
+	.header {
+		flex-shrink: 0;
+		padding: 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-bottom: 1px solid var(--border-color);
+
+		.title {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-weight: 600;
+			color: var(--primary-text-color);
+		}
+
+		.actions {
+			display: flex;
+			gap: 4px;
+		}
+	}
+
+	.bot-chips-wrap {
+		flex-shrink: 0;
+		overflow-x: auto;
+		padding: 8px;
+		border-bottom: 1px solid var(--border-color);
+		-webkit-overflow-scrolling: touch;
+
+		.bot-chips {
+			display: flex;
+			gap: 6px;
+
+			.chip {
+				flex-shrink: 0;
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				padding: 6px 10px;
+				border: 1px solid var(--border-color);
+				border-radius: 14px;
+				background: transparent;
+				color: var(--secondary-text-color);
+				font-size: 0.8rem;
+
+				&.active {
+					background-color: var(--primary-color);
+					color: var(--primary-text-color);
+					border-color: var(--primary-color);
+				}
+			}
+		}
+	}
+
+	.bot-chat {
+		flex: 1;
+		min-height: 0;
+		overflow-y: auto;
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+
+		.bot-empty {
+			text-align: center;
+			color: var(--secondary-text-color);
+			padding: 20px 10px;
+			font-size: 13px;
+
+			.icon {
+				font-size: 28px;
+				opacity: 0.5;
+			}
+
+			p {
+				margin-top: 8px;
+			}
+		}
+
+		.msg {
+			max-width: 92%;
+			padding: 8px 10px;
+			border-radius: 10px;
+			font-size: 13px;
+			white-space: pre-wrap;
+			word-break: break-word;
+
+			&.user {
+				align-self: flex-end;
+				background-color: var(--primary-color);
+				color: var(--primary-text-color);
+			}
+
+			&.assistant {
+				align-self: flex-start;
+				background-color: var(--secondary-color);
+				color: var(--secondary-text-color);
+
+				.msg-text.thinking {
+					opacity: 0.6;
+					font-style: italic;
+				}
+
+				.msg-text.error {
+					color: var(--error-color, #ff6b6b);
+				}
+			}
+		}
+	}
+
+	.bot-settings {
+		flex-shrink: 0;
+		max-height: 45%;
+		overflow-y: auto;
+		padding: 10px;
+		border-top: 1px solid var(--border-color);
+
+		&.hidden {
+			display: none;
+		}
+
+		label {
+			display: block;
+			font-size: 12px;
+			margin: 8px 0 4px;
+			color: var(--secondary-text-color);
+		}
+
+		label.checkbox-row {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-top: 12px;
+		}
+
+		select,
+		input[type="text"],
+		input[type="password"] {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid var(--border-color);
+			border-radius: 6px;
+			background: var(--secondary-color, transparent);
+			color: var(--primary-text-color);
+			box-sizing: border-box;
+		}
+
+		.settings-actions {
+			display: flex;
+			gap: 8px;
+			margin-top: 12px;
+
+			button {
+				flex: 1;
+				padding: 8px;
+				border: none;
+				border-radius: 6px;
+				font-weight: 600;
+
+				&.save {
+					background-color: var(--primary-color);
+					color: var(--primary-text-color);
+				}
+
+				&.cancel {
+					background: transparent;
+					color: var(--secondary-text-color);
+					border: 1px solid var(--border-color);
+				}
+			}
+		}
+
+		.hint {
+			font-size: 11px;
+			color: var(--secondary-text-color);
+			margin-top: 10px;
+			opacity: 0.8;
+		}
+	}
+
+	.bot-input-row {
+		flex-shrink: 0;
+		display: flex;
+		align-items: flex-end;
+		gap: 6px;
+		padding: 8px;
+		border-top: 1px solid var(--border-color);
+
+		.bot-input {
+			flex: 1;
+			resize: none;
+			max-height: 90px;
+			min-height: 36px;
+			padding: 8px;
+			border: 1px solid var(--border-color);
+			border-radius: 8px;
+			background: var(--secondary-color, transparent);
+			color: var(--primary-text-color);
+			box-sizing: border-box;
+		}
+
+		.send {
+			background-color: var(--primary-color);
+			color: var(--primary-text-color);
+			border-radius: 8px;
+			min-width: 38px;
+			min-height: 38px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: none;
+		}
+	}
+}
+
+@supports not (gap: 1px) {
+	.container.bots {
+		.title > * + * {
+			margin-left: 6px;
+		}
+
+		.msg + .msg {
+			margin-top: 8px;
+		}
+	}
+}

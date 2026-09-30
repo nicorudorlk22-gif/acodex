@@ -40,6 +40,34 @@ Acode/
 |- codemirror-lsp-client/ - Git submodule providing @codemirror/lsp-client (clone with --recurse-submodules)
 </pre>
 
+## • Bots IA Integrados
+
+Este fork inclui um painel de **Bots IA** no menu lateral do app, com até 10 assistentes, um para cada ocasião:
+
+| Bot | Ocasião |
+|-----|---------|
+| Assistente | Dúvidas gerais de código |
+| Corretor de Bugs | Encontrar e corrigir erros |
+| Explicador | Entender o que o código faz |
+| Refatorador | Melhorar estrutura do código |
+| Gerador de Testes | Criar testes automatizados |
+| Documentador | Gerar comentários e docs |
+| Commit | Mensagens de commit (Conventional Commits) |
+| Professor | Aprender conceitos |
+| Regex | Criar e decifrar expressões regulares |
+| Otimizador | Melhorar performance |
+
+### Como usar
+
+1. Compile e abra o app (o painel aparece na barra lateral com o ícone de chat).
+2. Toque na engrenagem e configure o provedor (Groq, OpenRouter, OpenAI ou qualquer API compatível com OpenAI), o modelo e a chave.
+3. A chave fica salva apenas no aparelho (`localStorage`) e é enviada direto ao provedor.
+4. O arquivo aberto no editor é enviado como contexto automaticamente (pode ser desativado nas configurações do painel).
+
+### Site
+
+A página oficial do projeto roda em GitHub Pages: https://rlkbiloga-coder.github.io/acode_original/
+
 ## • Multi-language Support
 
 Enhance Acode's capabilities by adding new languages easily. Just create a file with the language code (e.g., en-us for English) in [`src/lang/`](https://github.com/Acode-Foundation/Acode/tree/main/src/lang) and include it in [`src/lib/lang.js`](https://github.com/Acode-Foundation/Acode/blob/main/src/lib/lang.js). Manage strings across languages effortlessly using utility commands:
