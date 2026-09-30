@@ -4,6 +4,11 @@ check-filename = true
 [files]
 extend-exclude = [
     "node_modules",
+    # Arquivos em português (docs, site e painel de Bots IA)
+    "REPOSITORY.md",
+    "readme.md",
+    "index.html",
+    "src/sidebarApps/bots",
     "codemirror-lsp-client",
     "www",
     "*.yaml",
