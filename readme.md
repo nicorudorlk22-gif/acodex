@@ -81,6 +81,17 @@ acode_original/
 |- codemirror-lsp-client/ - Submódulo (LSP do CodeMirror)
 ```
 
+## Contribuição
+
+Veja [CONTRIBUTING.md](CONTRIBUTING.md) para instruções detalhadas de como contribuir e compilar o projeto.
+Consulte também o [Código de Conduta](CODE_OF_CONDUCT.md).
+
+## Contribuidores
+
+<a href="https://github.com/rlkbiloga-coder/acode_original/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=rlkbiloga-coder/acode_original" />
+</a>
+
 ## Releases
 
 Cada versão sai com tag e notas de lançamento:
