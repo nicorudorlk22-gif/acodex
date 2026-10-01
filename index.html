@@ -3,547 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Acode Original - Editor de Código Profissional para Android com suporte a múltiplas linguagens">
-    <meta name="keywords" content="editor, código, android, javascript, python, java, html, css">
-    <title>Acode Original - Editor de Código</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --dark: #1a1a2e;
-            --light: #f5f7fa;
-            --accent: #00d4ff;
-            --danger: #ff6b6b;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        /* Navigation */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav .logo {
-            font-size: 1.5em;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        nav .links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        nav a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3.5em;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            animation: slideDown 0.8s ease-out;
-        }
-
-        .hero p {
-            font-size: 1.3em;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            animation: slideUp 0.8s ease-out 0.2s both;
-        }
-
-        .hero .subtitle {
-            font-size: 1.1em;
-            opacity: 0.85;
-            margin-bottom: 3rem;
-            animation: slideUp 0.8s ease-out 0.4s both;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: slideUp 0.8s ease-out 0.6s both;
-        }
-
-        .btn {
-            padding: 14px 32px;
-            font-size: 1.1em;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: white;
-            color: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        /* Features */
-        .features {
-            background: white;
-            padding: 80px 20px;
-            margin-top: 60px;
-        }
-
-        .features .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .features h2 {
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 3rem;
-            color: var(--dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f7 100%);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--primary);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-card h3 {
-            color: var(--primary);
-            margin-bottom: 1rem;
-            font-size: 1.3em;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .feature-icon {
-            font-size: 2.5em;
-            margin-bottom: 1rem;
-        }
-
-        /* Languages */
-        .languages {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 80px 20px;
-            color: white;
-        }
-
-        .languages .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .languages h2 {
-            text-align: center;
-            font-size: 2.5em;
-            margin-bottom: 3rem;
-        }
-
-        .languages-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .language-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .language-card:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
-        }
-
-        .language-card strong {
-            display: block;
-            margin-top: 0.5rem;
-        }
-
-        .percentage {
-            font-size: 1.3em;
-            font-weight: bold;
-        }
-
-        /* Stats */
-        .stats {
-            background: white;
-            padding: 60px 20px;
-            text-align: center;
-        }
-
-        .stats .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-item h3 {
-            font-size: 2.5em;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-        }
-
-        footer .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: white;
-        }
-
-        .footer-bottom {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.8;
-        }
-
-        /* Animations */
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5em;
-            }
-
-            .hero p {
-                font-size: 1.1em;
-            }
-
-            nav .links {
-                display: none;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-    </style>
+    <meta name="theme-color" content="#0a0a16">
+    <meta name="description" content="Thcode · Acode Editor — editor de código para Android com preview em tempo real, terminal, plugins e 10 bots de IA integrados.">
+    <meta property="og:title" content="Thcode · Acode Editor">
+    <meta property="og:description" content="Editor de código mobile com 10 bots de IA integrados.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rlkbiloga-coder.github.io/acode_original/">
+    <meta property="og:image" content="https://rlkbiloga-coder.github.io/acode_original/res/logo_1.png">
+    <title>Thcode · Acode Editor — Código no celular, com IA</title>
+    <link rel="icon" href="res/logo_1.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="site/style.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="container">
-            <div class="logo">🚀 Acode Original</div>
-            <ul class="links">
-                <li><a href="#features">Recursos</a></li>
-                <li><a href="#languages">Linguagens</a></li>
-                <li><a href="#github">GitHub</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <div class="hero">
-        <h1>Editor de Código Profissional</h1>
-        <p>Escreva, edite e execute código em seu Android</p>
-        <p class="subtitle">Suporte para JavaScript, Python, Java, HTML, CSS e muito mais</p>
-        
-        <div class="cta-buttons">
-            <a href="https://play.google.com/store/apps/details?id=com.foxdebug.acodefree" class="btn btn-primary">
-                📱 Baixar no Play Store
-            </a>
-            <a href="https://github.com/rlkbiloga-coder/acode_original" class="btn btn-secondary">
-                💻 Ver no GitHub
-            </a>
-        </div>
+    <div class="bg-orbs" aria-hidden="true">
+        <span class="orb orb-1"></span>
+        <span class="orb orb-2"></span>
+        <span class="orb orb-3"></span>
+        <span class="grid-overlay"></span>
     </div>
 
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2>Recursos Principais</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📝</div>
-                    <h3>Edição Completa</h3>
-                    <p>Edite e crie websites com suporte a HTML, CSS, JavaScript e muito mais.</p>
-                </div>
+    <header class="nav" id="navbar">
+        <nav class="nav-inner">
+            <a class="logo" href="#top">
+                <img src="res/logo_1.png" alt="Logo Acode" width="34" height="34">
+                <span class="logo-text">Thcode<small>by rlkbiloga</small></span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Recursos</a></li>
+                <li><a href="#bots">Bots IA</a></li>
+                <li><a href="#languages">Linguagens</a></li>
+                <li><a href="#build">Compilar</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a class="btn btn-ghost" href="https://github.com/rlkbiloga-coder/acode_original" target="_blank" rel="noopener">GitHub</a>
+                <a class="btn btn-primary" href="https://github.com/rlkbiloga-coder/acode_original/releases" target="_blank" rel="noopener">Releases</a>
+                <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
 
-                <div class="feature-card">
-                    <div class="feature-icon">👁️</div>
-                    <h3>Preview em Tempo Real</h3>
-                    <p>Visualize suas alterações instantaneamente em um navegador integrado.</p>
+    <main id="top">
+        <section class="hero">
+            <div class="hero-content reveal">
+                <span class="badge-pill"><span class="dot"></span> v2.0.0 · Código no celular, com IA</span>
+                <h1>Edite código<br><span class="gradient-text">como um desktop</span><br>no seu celular</h1>
+                <p class="hero-sub">
+                    Preview em tempo real, terminal embutido, console JavaScript, S/FTP e SSH
+                    — e <b>10 bots de IA</b> prontos pra cada ocasião. Interface idêntica
+                    ao Acode, turbinada.
+                </p>
+                <div class="hero-cta">
+                    <a class="btn btn-primary btn-lg" href="#bots">Conhecer os bots</a>
+                    <a class="btn btn-outline btn-lg" href="https://github.com/rlkbiloga-coder/acode_original" target="_blank" rel="noopener">Ver código-fonte</a>
                 </div>
+                <ul class="hero-stats">
+                    <li><b data-count="10">0</b><span>Bots IA</span></li>
+                    <li><b data-count="30">0</b><span>+ linguagens</span></li>
+                    <li><b data-count="100">0</b><span>% open source</span></li>
+                </ul>
+            </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">🔌</div>
-                    <h3>Plugins Personalizados</h3>
-                    <p>Estenda funcionalidades com plugins da comunidade.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🖥️</div>
-                    <h3>Console JavaScript</h3>
-                    <p>Execute e debug JavaScript diretamente no editor.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">🌐</div>
-                    <h3>S/FTP e SSH</h3>
-                    <p>Integração com FTP e SSH para gerenciar arquivos remotos.</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">⚙️</div>
-                    <h3>Terminal Integrado</h3>
-                    <p>Terminal Alpine para executar comandos e scripts.</p>
+            <div class="hero-demo reveal" aria-hidden="true">
+                <div class="phone">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="app-header">
+                            <span class="app-dot"></span>
+                            <span class="app-title">index.html</span>
+                            <span class="app-bots">🤖 Bots IA</span>
+                        </div>
+                        <div class="app-body">
+                            <pre class="code-area"><code id="typedCode"></code><span class="cursor">▊</span></pre>
+                            <div class="ai-chip" id="aiChip">
+                                <span class="ai-chip-icon">🪄</span>
+                                <span class="ai-chip-text">Corretor de Bugs: analisando o arquivo…</span>
+                            </div>
+                        </div>
+                        <div class="app-tabbar">
+                            <span class="tab active"></span><span class="tab"></span><span class="tab"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Bots Section -->
-    <section class="features" id="bots">
-        <div class="container">
-            <h2>Bots IA Integrados</h2>
-            <p style="text-align:center;color:rgba(255,255,255,.85);margin-bottom:30px;">
-                10 assistentes de IA no painel lateral do app, um para cada ocasião.
-                Configure Groq, OpenRouter, OpenAI ou qualquer API compatível - a chave fica só no seu aparelho.
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title reveal">Recursos <span class="gradient-text">principais</span></h2>
+                <div class="features-grid">
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">📝</div>
+                        <h3>Edição completa</h3>
+                        <p>HTML, CSS, JavaScript, Python, Java e muito mais, com destaque de sintaxe avançado.</p>
+                    </article>
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">👁️</div>
+                        <h3>Preview em tempo real</h3>
+                        <p>Visualize suas alterações instantaneamente no navegador integrado.</p>
+                    </article>
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">🔌</div>
+                        <h3>Plugins</h3>
+                        <p>Estenda o editor com plugins: emmet, prettier, live server e dezenas de outros.</p>
+                    </article>
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">🖥️</div>
+                        <h3>Console + Terminal</h3>
+                        <p>Console JavaScript embutido e terminal Alpine pra rodar comandos no aparelho.</p>
+                    </article>
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">🌐</div>
+                        <h3>S/FTP e SSH</h3>
+                        <p>Edite arquivos direto no servidor, com gerenciador remoto completo.</p>
+                    </article>
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">🤖</div>
+                        <h3>Bots IA integrados</h3>
+                        <p>Dez assistentes no painel lateral, um pra cada ocasião. Groq, OpenRouter ou OpenAI.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="bots" id="bots">
+            <div class="container">
+                <h2 class="section-title reveal">10 bots de IA, <span class="gradient-text">um pra cada ocasião</span></h2>
+                <p class="section-sub reveal">
+                    Configure sua chave uma vez (Groq, OpenRouter, OpenAI ou API compatível) e converse
+                    com o especialista que a tarefa pedir. A chave fica só no seu aparelho.
+                </p>
+                <div class="bots-grid">
+                    <div class="bot-card reveal"><span class="bot-emoji">💬</span><h3>Assistente</h3><p>Dúvidas gerais de código</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">🪄</span><h3>Corretor de Bugs</h3><p>Encontra e corrige erros</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">📖</span><h3>Explicador</h3><p>Explica o que o código faz</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">✨</span><h3>Refatorador</h3><p>Melhora a estrutura</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">✅</span><h3>Gerador de Testes</h3><p>Testes automatizados</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">📝</span><h3>Documentador</h3><p>Comentários e documentação</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">🏷️</span><h3>Commit</h3><p>Mensagens Conventional Commits</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">💡</span><h3>Professor</h3><p>Ensina com exercícios</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">🔍</span><h3>Regex</h3><p>Cria e decifra regex</p></div>
+                    <div class="bot-card reveal"><span class="bot-emoji">⚡</span><h3>Otimizador</h3><p>Aponta gargalos de performance</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="languages" id="languages">
+            <div class="container">
+                <h2 class="section-title reveal">Linguagens <span class="gradient-text">suportadas</span></h2>
+            </div>
+            <div class="marquee reveal" aria-hidden="true">
+                <div class="marquee-track">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>TypeScript</span>
+                    <span>Python</span><span>Java</span><span>Kotlin</span><span>C / C++</span>
+                    <span>C#</span><span>PHP</span><span>Go</span><span>Rust</span>
+                    <span>Ruby</span><span>Swift</span><span>SQL</span><span>JSON</span>
+                    <span>Markdown</span><span>YAML</span><span>XML</span><span>Shell</span>
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>TypeScript</span>
+                    <span>Python</span><span>Java</span><span>Kotlin</span><span>C / C++</span>
+                    <span>C#</span><span>PHP</span><span>Go</span><span>Rust</span>
+                    <span>Ruby</span><span>Swift</span><span>SQL</span><span>JSON</span>
+                    <span>Markdown</span><span>YAML</span><span>XML</span><span>Shell</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="build" id="build">
+            <div class="container">
+                <h2 class="section-title reveal">Compile <span class="gradient-text">você mesmo</span></h2>
+                <p class="section-sub reveal">Node.js 20+, JDK 17 e Android SDK pra gerar o APK.</p>
+                <div class="terminal-window reveal">
+                    <div class="terminal-bar"><span></span><span></span><span></span><em>terminal</em></div>
+                    <pre class="terminal-body"><code>git clone https://github.com/rlkbiloga-coder/acode_original.git
+cd acode_original
+git submodule update --init --recursive
+npm install
+npm run build</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" id="github">
+        <div class="container footer-inner">
+            <p><b>Thcode · Acode Editor</b> — código no celular, com IA.</p>
+            <p class="footer-links">
+                <a href="https://github.com/rlkbiloga-coder/acode_original" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://github.com/rlkbiloga-coder/acode_original/releases" target="_blank" rel="noopener">Releases</a>
+                <a href="https://github.com/rlkbiloga-coder/acode_original/blob/main/LICENSE" target="_blank" rel="noopener">Licença MIT</a>
             </p>
-            <div class="features-grid">
-                <div class="feature-card"><div class="feature-icon">💬</div><h3>Assistente</h3><p>Dúvidas gerais de código.</p></div>
-                <div class="feature-card"><div class="feature-icon">🪄</div><h3>Corretor de Bugs</h3><p>Encontra e corrige erros no arquivo aberto.</p></div>
-                <div class="feature-card"><div class="feature-icon">📖</div><h3>Explicador</h3><p>Explica o que o código faz, com linguagem simples.</p></div>
-                <div class="feature-card"><div class="feature-icon">✨</div><h3>Refatorador</h3><p>Melhora a estrutura sem mudar o comportamento.</p></div>
-                <div class="feature-card"><div class="feature-icon">✅</div><h3>Gerador de Testes</h3><p>Cria testes automatizados para o seu código.</p></div>
-                <div class="feature-card"><div class="feature-icon">📝</div><h3>Documentador</h3><p>Gera comentários e documentação do arquivo.</p></div>
-                <div class="feature-card"><div class="feature-icon">🏷️</div><h3>Commit</h3><p>Mensagens de commit no padrão Conventional.</p></div>
-                <div class="feature-card"><div class="feature-icon">💡</div><h3>Professor</h3><p>Ensina conceitos com exemplos e exercícios.</p></div>
-                <div class="feature-card"><div class="feature-icon">🔍</div><h3>Regex</h3><p>Cria e decifra expressões regulares.</p></div>
-                <div class="feature-card"><div class="feature-icon">⚡</div><h3>Otimizador</h3><p>Aponta gargalos e mostra versões mais rápidas.</p></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Languages Section -->
-    <section class="languages" id="languages">
-        <div class="container">
-            <h2>Linguagens Suportadas</h2>
-            <div class="languages-grid">
-                <div class="language-card">
-                    <strong>JavaScript</strong>
-                    <div class="percentage">59.8%</div>
-                </div>
-                <div class="language-card">
-                    <strong>Java</strong>
-                    <div class="percentage">15.6%</div>
-                </div>
-                <div class="language-card">
-                    <strong>TypeScript</strong>
-                    <div class="percentage">15.4%</div>
-                </div>
-                <div class="language-card">
-                    <strong>SCSS</strong>
-                    <div class="percentage">5.8%</div>
-                </div>
-                <div class="language-card">
-                    <strong>Kotlin</strong>
-                    <div class="percentage">1.5%</div>
-                </div>
-                <div class="language-card">
-                    <strong>CSS</strong>
-                    <div class="percentage">1%</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="container">
-            <div class="stat-item">
-                <h3>📦</h3>
-                <p>v1.13.5</p>
-            </div>
-            <div class="stat-item">
-                <h3>🔒</h3>
-                <p>Licença MIT</p>
-            </div>
-            <div class="stat-item">
-                <h3>👥</h3>
-                <p>Código Aberto</p>
-            </div>
-            <div class="stat-item">
-                <h3>🚀</h3>
-                <p>Ativo e em Desenvolvimento</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer id="github">
-        <div class="container">
-            <h3>Acode Original</h3>
-            <p>Um clone personalizado do Acode com licença MIT</p>
-            
-            <div class="footer-links">
-                <a href="https://github.com/rlkbiloga-coder/acode_original">📂 Repositório</a>
-                <a href="https://github.com/rlkbiloga-coder/acode_original/issues">🐛 Issues</a>
-                <a href="https://github.com/rlkbiloga-coder/acode_original/releases">📦 Releases</a>
-                <a href="https://github.com/rlkbiloga-coder/acode_original/blob/main/LICENSE">📜 Licença</a>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2026 rlkbiloga-coder | MIT License</p>
-                <p>Baseado em <a href="https://github.com/Acode-Foundation/Acode" style="color: var(--accent);">Acode Foundation</a></p>
-            </div>
+            <p class="footer-note">Projeto derivado do editor de código aberto Acode.</p>
         </div>
     </footer>
 
-    <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+    <button class="to-top" id="toTop" aria-label="Voltar ao topo">↑</button>
+
+    <script src="site/main.js" defer></script>
 </body>
 </html>

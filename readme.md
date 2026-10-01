@@ -1,106 +1,91 @@
-# Acode - Code Editor for Android
+<div align="center">
+  <img src="res/logo_1.png" width="180" alt="Acode">
+  <h1>Thcode · Acode Editor</h1>
+  <p><b>Editor de código para Android, com 10 bots de IA integrados</b></p>
 
-<p align="center">
-  <img src='res/logo_1.png' width='250'>
-</p>
+  <a href="https://github.com/rlkbiloga-coder/acode_original/releases"><img src="https://img.shields.io/badge/versão-2.0.0-blue?style=flat-square" alt="versão"></a>
+  <a href="https://github.com/rlkbiloga-coder/acode_original/actions"><img src="https://img.shields.io/github/actions/workflow/status/rlkbiloga-coder/acode_original/ci.yml?style=flat-square&label=CI" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/licen%C3%A7a-MIT-green?style=flat-square" alt="licença"></a>
+  <a href="https://rlkbiloga-coder.github.io/acode_original/"><img src="https://img.shields.io/badge/site-online-purple?style=flat-square" alt="site"></a>
+</div>
 
-[![](https://img.shields.io/endpoint?logo=telegram&label=Acode&style=flat&url=https%3A%2F%2Facode.app%2Fapi%2Ftelegram-members-count)](https://t.me/foxdebug_acode) [![](https://dcbadge.vercel.app/api/server/vVxVWYUAWD?style=flat)](https://discord.gg/vVxVWYUAWD)
+---
 
-## • Overview
+## Visão geral
 
-Welcome to Acode Editor - a powerful and versatile code editing tool designed specifically for Android devices. Whether you're working on HTML, CSS, JavaScript, or other programming languages, Acode empowers you to code on-the-go with confidence.
+Editor de código mobile completo para criar sites e programar em qualquer lugar, direto do celular. Edita HTML, CSS, JavaScript, Python, Java e dezenas de outras linguagens, com preview em tempo real, console embutido, terminal e plugins.
 
-## • Features
+É um fork avançado do editor de código aberto Acode, mantido de forma independente, com a interface do app original preservada e a adição de um painel de IA próprio.
 
-- Edit and create websites, and instantly preview them in a browser.
-- Seamlessly modify source files for various languages like Python, Java, JavaScript, and more.
-- Built-in javascript console
-- S/FTP and SSH terminal integration
-- Built-in terminal(Alpine)
-- Enjoy multi-language editing support with easy management tools.
-- Enjoy a large collections of community plugins to enhance your coding experience.
+Site oficial: https://rlkbiloga-coder.github.io/acode_original/
 
-## • Installation
+## Recursos
 
-You can get Acode Editor from popular platforms:
+- Edição de arquivos em dezenas de linguagens, com destaque de sintaxe
+- Preview em tempo real de sites direto no editor
+- Console JavaScript embutido
+- Terminal Alpine integrado
+- S/FTP e SSH para arquivos remotos
+- Sistema de plugins com muitos disponíveis
+- Suporte a mais de 30 idiomas na interface
+- Modo escuro e temas
+- Interface idêntica ao app original, fluida no Android
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="60">](https://play.google.com/store/apps/details?id=com.foxdebug.acodefree) [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60"/>](https://www.f-droid.org/packages/com.foxdebug.acode/)
+## Bots IA Integrados
 
-## • Project Structure
+Painel de IA no menu lateral, com 10 bots, um para cada ocasião:
 
-<pre>
-Acode/
-|
-|- src/   - Core code and language files
-|
-|- www/   - Public documents, compiled files, and HTML templates
-|
-|- utils/ - CLI tools for building, string manipulation, and more
-|
-|- codemirror-lsp-client/ - Git submodule providing @codemirror/lsp-client (clone with --recurse-submodules)
-</pre>
+1. **Assistente** — dúvidas gerais de código
+2. **Corretor de Bugs** — encontra e corrige erros
+3. **Explicador** — explica o que o código faz
+4. **Refatorador** — melhora a estrutura do código
+5. **Gerador de Testes** — cria testes automatizados
+6. **Documentador** — gera comentários e documentação
+7. **Commit** — mensagens no padrão Conventional Commits
+8. **Professor** — ensina conceitos com exercícios
+9. **Regex** — cria e decifra expressões regulares
+10. **Otimizador** — aponta gargalos de performance
 
-## • Bots IA Integrados
+### Como usar os bots
 
-Este fork inclui um painel de **Bots IA** no menu lateral do app, com até 10 assistentes, um para cada ocasião:
+1. Compile o app e abra o painel "Bots IA" na barra lateral.
+2. Toque na engrenagem e configure o provedor: Groq, OpenRouter, OpenAI ou qualquer API compatível com OpenAI.
+3. A chave da API fica salva apenas no aparelho (`localStorage`) e é enviada direto ao provedor.
+4. O arquivo aberto no editor é enviado como contexto automaticamente (pode ser desativado no painel).
 
-| Bot | Ocasião |
-|-----|---------|
-| Assistente | Dúvidas gerais de código |
-| Corretor de Bugs | Encontrar e corrigir erros |
-| Explicador | Entender o que o código faz |
-| Refatorador | Melhorar estrutura do código |
-| Gerador de Testes | Criar testes automatizados |
-| Documentador | Gerar comentários e docs |
-| Commit | Mensagens de commit (Conventional Commits) |
-| Professor | Aprender conceitos |
-| Regex | Criar e decifrar expressões regulares |
-| Otimizador | Melhorar performance |
+Sem chave configurada, o bot avisa e abre as configurações. Nada de respostas inventadas.
 
-### Como usar
+## Compilação
 
-1. Compile e abra o app (o painel aparece na barra lateral com o ícone de chat).
-2. Toque na engrenagem e configure o provedor (Groq, OpenRouter, OpenAI ou qualquer API compatível com OpenAI), o modelo e a chave.
-3. A chave fica salva apenas no aparelho (`localStorage`) e é enviada direto ao provedor.
-4. O arquivo aberto no editor é enviado como contexto automaticamente (pode ser desativado nas configurações do painel).
+Requisitos: Node.js 20+, JDK 17 e Android SDK (para o APK).
 
-### Site
-
-A página oficial do projeto roda em GitHub Pages: https://rlkbiloga-coder.github.io/acode_original/
-
-## • Multi-language Support
-
-Enhance Acode's capabilities by adding new languages easily. Just create a file with the language code (e.g., en-us for English) in [`src/lang/`](https://github.com/Acode-Foundation/Acode/tree/main/src/lang) and include it in [`src/lib/lang.js`](https://github.com/Acode-Foundation/Acode/blob/main/src/lib/lang.js). Manage strings across languages effortlessly using utility commands:
-
-```shell
-pnpm run lang add
-pnpm run lang remove
-pnpm run lang search
-pnpm run lang update
+```bash
+git clone https://github.com/rlkbiloga-coder/acode_original.git
+cd acode_original
+git submodule update --init --recursive
+npm install
+npm run build        # gera o app (www/)
+npm run build:android # APK via Cordova (requer Android SDK)
 ```
 
-## • Contributing & Building the Application
+Para desenvolvimento web local: `npm run dev`
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
+## Estrutura do projeto
 
-## • Contributors
+```
+acode_original/
+|- index.html, site/   - Site oficial (GitHub Pages)
+|- src/                - Código do app, estilos e traduções
+|- www/                - Arquivos compilados do app
+|- utils/              - Scripts de build e CLI
+|- codemirror-lsp-client/ - Submódulo (LSP do CodeMirror)
+```
 
-<a href="https://github.com/Acode-Foundation/Acode/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Acode-Foundation/Acode" />
-</a>
+## Releases
 
-## • Developing a Plugin for Acode
+Cada versão sai com tag e notas de lançamento:
+https://github.com/rlkbiloga-coder/acode_original/releases
 
-For comprehensive documentation on creating plugins for Acode Editor, visit the [repository](https://github.com/Acode-Foundation/acode-plugin).
+## Licença
 
-For plugin development information, refer to: [Acode Plugin Documentation](https://docs.acode.app/)
-
-## Star History
-
-<a href="https://star-history.com/#Acode-Foundation/Acode&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date" />
- </picture>
-</a>
+MIT. Projeto derivado do editor Acode, mantido por rlkbiloga-coder.

@@ -1,8 +1,8 @@
 {
   "name": "com.foxdebug.acode",
   "displayName": "Acode",
-  "version": "1.13.5",
-  "description": "Acode is a code editor for android",
+  "version": "2.0.0",
+  "description": "Advanced mobile code editor for Android with 10 integrated AI bots (Acode-based)",
   "scripts": {
     "lang": "node ./utils/lang.js",
     "build": "sh utils/scripts/build.sh",
@@ -25,7 +25,7 @@
   "keywords": [
     "ecosystem:cordova"
   ],
-  "author": "Foxdebug (Ajit Kumar)",
+  "author": "rlkbiloga-coder",
   "license": "MIT",
   "cordova": {
     "plugins": {
