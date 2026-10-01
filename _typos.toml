@@ -9,6 +9,8 @@ extend-exclude = [
     "readme.md",
     "index.html",
     "src/sidebarApps/bots",
+    "CHANGELOG.md",
+    "site",
     "codemirror-lsp-client",
     "www",
     "*.yaml",
