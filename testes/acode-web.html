@@ -2,230 +2,302 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Acode — Teste Web</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Acode</title>
+
+<!-- ============================================================
+  Acode — CLONE VISUAL PARA TESTE NO NAVEGADOR
+  Reproduz a interface real do app Acode do repositório:
+  splash de carregamento, cabeçalho, explorador de arquivos,
+  editor (tema one_dark, o padrão do app), quicktools e console.
+  Clone de aparência — não é o app completo.
+============================================================ -->
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #1e1e1e;
-    --bg2: #252526;
-    --bg3: #2d2d30;
-    --border: #3c3c3c;
-    --text: #cccccc;
-    --text2: #8a8a8a;
-    --accent: #4fc1ff;
-    --green: #89d185;
-    --header-h: 42px;
+    --primary-color: rgb(153, 153, 255);
+    --primary-text-color: #fff;
+    --bg-color: #20202c;
+    --text-color: #252525;
+    --secondary-text-color: #999999;
+    --border: #e0e0e0;
+    --panel-bg: #fafafa;
   }
   html, body { height: 100%; overflow: hidden; }
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-family: Roboto, "Segoe UI", sans-serif;
     font-size: 14px;
-    display: flex;
-    flex-direction: column;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
+
+  /* ============ SPLASH (cópia do www/index.html) ============ */
+  #splash {
+    position: fixed; inset: 0; z-index: 999999;
+    background-image: url("../www/logo.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 180px;
+    background-color: var(--primary-color);
+    text-align: center;
+    transition: opacity .35s ease;
+  }
+  #splash.hide { opacity: 0; pointer-events: none; }
+  .splash-version {
+    position: absolute; top: 15px; left: 15px;
+    color: rgb(255, 255, 255); font-size: 0.8rem;
+    white-space: pre; font-family: monospace; text-align: left;
+  }
+  .splash-message {
+    position: absolute; bottom: 15px; left: 50%;
+    transform: translateX(-50%);
+    color: rgb(255, 255, 255); font-size: 1rem;
+    width: 90vw; text-align: center;
+  }
+  @keyframes splashbar { 0% { width: 0 } 100% { width: 100% } }
+  .splash-bar {
+    position: absolute; bottom: 0; left: 0; height: 3px;
+    background: rgba(255,255,255,.85);
+    animation: splashbar 2.4s ease forwards;
+  }
+
+  /* ============ APP ============ */
+  #app { display: none; height: 100%; flex-direction: column; }
+  #app.show { display: flex; }
+
   header {
-    height: var(--header-h);
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    gap: 10px;
-    flex-shrink: 0;
+    height: 44px; flex-shrink: 0;
+    background: var(--primary-color);
+    color: var(--primary-text-color);
+    display: flex; align-items: center;
+    padding: 0 8px; gap: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.25);
+    z-index: 5;
   }
-  header .logo {
-    width: 22px; height: 22px;
-    background: var(--accent);
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>') center/contain no-repeat;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0 4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>') center/contain no-repeat;
+  header .icon-btn {
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: none; cursor: pointer;
+    color: var(--primary-text-color); border-radius: 50%;
   }
-  header h1 { font-size: 15px; font-weight: 500; color: #eee; }
-  header .spacer { flex: 1; }
-  header button {
-    background: var(--bg3);
-    color: var(--text);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 6px 12px;
-    font-size: 13px;
-    cursor: pointer;
+  header .icon-btn:hover { background: rgba(255,255,255,.15); }
+  header .title {
+    flex: 1; font-size: 17px; font-weight: 500; letter-spacing: .2px;
+    padding-left: 4px;
   }
-  header button:hover { border-color: var(--accent); color: #fff; }
+  .material-ic {
+    font-size: 22px; line-height: 1;
+    font-family: "Material Icons", sans-serif;
+    font-style: normal; display: inline-block;
+  }
 
-  main { flex: 1; display: flex; min-height: 0; }
+  main { flex: 1; display: flex; min-height: 0; position: relative; }
 
-  /* ---- Sidebar ---- */
+  /* ---- Sidebar (explorador de arquivos) ---- */
   #sidebar {
-    width: 230px;
-    min-width: 0;
-    background: var(--bg2);
+    width: 240px; min-width: 0; flex-shrink: 0;
+    background: var(--panel-bg);
     border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    transition: margin-left .2s ease;
+    display: flex; flex-direction: column;
+    transition: margin-left .22s ease;
   }
-  #sidebar.hidden { margin-left: -230px; }
-  #sidebar .section-title {
-    padding: 10px 12px 6px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    color: var(--text2);
+  #sidebar.hidden { margin-left: -240px; }
+  #sidebar .side-head {
+    padding: 12px 14px 8px;
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--secondary-text-color);
   }
-  #file-tree { flex: 1; overflow-y: auto; padding: 0 6px 12px; }
+  #file-tree { flex: 1; overflow-y: auto; padding: 0 8px 12px; }
   .tree-item {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 5px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; border-radius: 4px;
+    cursor: pointer; font-size: 13px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    color: var(--text-color);
   }
-  .tree-item:hover { background: var(--bg3); }
-  .tree-item.active { background: #094771; color: #fff; }
-  .tree-item .icon { width: 15px; text-align: center; flex-shrink: 0; }
-  .tree-item .icon.folder { color: #dcb67a; }
-  .tree-item .icon.file { color: var(--accent); }
+  .tree-item:hover { background: rgba(153,153,255,.12); }
+  .tree-item.active { background: var(--primary-color); color: #fff; }
+  .tree-item .mi { font-size: 17px; color: #b3b3ff; }
+  .tree-item.active .mi { color: #fff; }
+  .tree-item.indent-1 { padding-left: 26px; }
 
   /* ---- Editor ---- */
   #editor-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
   #tabs {
-    display: flex;
-    overflow-x: auto;
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
+    display: flex; overflow-x: auto; flex-shrink: 0;
+    background: #fafafa; border-bottom: 1px solid var(--border);
     scrollbar-width: none;
   }
   #tabs::-webkit-scrollbar { display: none; }
   .tab {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 14px;
-    font-size: 13px;
-    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 14px; font-size: 13px; cursor: pointer;
     border-right: 1px solid var(--border);
-    color: var(--text2);
-    flex-shrink: 0;
+    color: var(--secondary-text-color); flex-shrink: 0;
+    background: #fafafa;
   }
-  .tab.active { background: var(--bg); color: #fff; border-top: 2px solid var(--accent); }
-  .tab .close {
-    font-size: 15px;
-    opacity: .5;
-    padding: 0 2px;
+  .tab.active {
+    background: #fff; color: var(--text-color);
+    border-bottom: 2px solid var(--primary-color);
   }
-  .tab .close:hover { opacity: 1; color: #f48771; }
-  #editor { flex: 1; min-height: 0; }
+  .tab .close { opacity: .45; font-size: 15px; padding: 0 2px; }
+  .tab .close:hover { opacity: 1; color: #e05252; }
+  #editor { flex: 1; min-height: 0; font-size: 13px; }
+
+  /* ---- Quicktools (barra de ícones do app) ---- */
+  #quicktools {
+    height: 38px; flex-shrink: 0;
+    background: #fafafa; border-top: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 6px; gap: 2px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  #quicktools::-webkit-scrollbar { display: none; }
+  #quicktools .qt-btn {
+    min-width: 36px; height: 30px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: none; border: none; border-radius: 4px;
+    cursor: pointer; color: #555;
+  }
+  #quicktools .qt-btn:hover { background: rgba(153,153,255,.18); color: var(--primary-color); }
+  #quicktools .qt-sep {
+    width: 1px; height: 20px; background: var(--border); margin: 0 4px; flex-shrink: 0;
+  }
 
   /* ---- Console ---- */
   #console {
-    height: 150px;
-    background: #1b1b1b;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
+    height: 140px; flex-shrink: 0;
+    background: #20202c; border-top: 1px solid #3c3c4a;
+    display: flex; flex-direction: column;
     transition: height .2s ease;
   }
   #console.collapsed { height: 30px; }
   #console .console-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 12px;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    color: var(--text2);
-    cursor: pointer;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 12px; cursor: pointer; flex-shrink: 0;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: #a0a0b8;
   }
   #console-output {
-    flex: 1;
-    overflow-y: auto;
-    font-family: 'Cascadia Code', Consolas, monospace;
-    font-size: 12px;
-    padding: 0 12px 10px;
-    white-space: pre-wrap;
-    word-break: break-word;
+    flex: 1; overflow-y: auto;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 12px; padding: 0 12px 10px;
+    white-space: pre-wrap; word-break: break-word; color: #c8c8dc;
   }
   #console-output .log { color: #9cdcfe; }
   #console-output .err { color: #f48771; }
-  #console-output .ok { color: var(--green); }
+  #console-output .ok { color: #89d185; }
+
+  /* ---- Toast (notificação do app) ---- */
+  #toast {
+    position: fixed; bottom: 60px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #323232; color: #fff;
+    padding: 10px 18px; border-radius: 4px;
+    font-size: 13px; opacity: 0; pointer-events: none;
+    transition: all .25s ease; z-index: 999;
+    max-width: 86vw; text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   @media (max-width: 700px) {
-    #sidebar { position: absolute; z-index: 10; top: var(--header-h); bottom: 0; }
-    #sidebar.hidden { margin-left: -230px; }
+    #sidebar { position: absolute; z-index: 10; top: 0; bottom: 0; }
+    #sidebar.hidden { margin-left: -240px; }
   }
 </style>
 </head>
-<body>
+<body class="loading">
 
-<header>
-  <div class="logo"></div>
-  <h1>Acode <span style="color:var(--text2);font-size:12px">— teste web</span></h1>
-  <div class="spacer"></div>
-  <button id="btn-sidebar">Arquivos</button>
-  <button id="btn-run">▶ Rodar</button>
-</header>
+<!-- ===== SPLASH ===== -->
+<div id="splash">
+  <div class="splash-version">Acode v1.13.5</div>
+  <div class="splash-message">Carregando arquivos...</div>
+  <div class="splash-bar"></div>
+</div>
 
-<main>
-  <nav id="sidebar">
-    <div class="section-title">Explorador</div>
-    <div id="file-tree"></div>
-  </nav>
+<!-- ===== APP ===== -->
+<div id="app">
 
-  <section id="editor-pane">
-    <div id="tabs"></div>
-    <div id="editor"></div>
-    <div id="console">
-      <div class="console-header" id="console-toggle">
-        <span>Console</span>
-        <span id="console-arrow">▼</span>
+  <header>
+    <button class="icon-btn" id="btn-sidebar" title="Arquivos">
+      <span class="material-ic">&#9776;</span>
+    </button>
+    <span class="title">Acode</span>
+    <button class="icon-btn" id="btn-new" title="Novo arquivo">&#65291;</button>
+    <button class="icon-btn" id="btn-search" title="Buscar">&#8981;</button>
+    <button class="icon-btn" id="btn-save" title="Salvar">&#128190;</button>
+    <button class="icon-btn" id="btn-menu" title="Mais opções">&#8942;</button>
+  </header>
+
+  <main>
+    <nav id="sidebar">
+      <div class="side-head">Explorador</div>
+      <div id="file-tree"></div>
+    </nav>
+
+    <section id="editor-pane">
+      <div id="tabs"></div>
+      <div id="editor"></div>
+      <div id="quicktools">
+        <button class="qt-btn" title="Desfazer">&#8630;</button>
+        <button class="qt-btn" title="Refazer">&#8631;</button>
+        <button class="qt-btn" title="Buscar">&#8981;</button>
+        <span class="qt-sep"></span>
+        <button class="qt-btn" id="qt-run" title="Rodar">&#9654;</button>
+        <button class="qt-btn" title="Formatar">&#9998;</button>
+        <button class="qt-btn" title="Salvar">&#128190;</button>
+        <span class="qt-sep"></span>
+        <button class="qt-btn" title="Terminal">&#9000;</button>
+        <button class="qt-btn" title="Plugins">&#9881;</button>
+        <button class="qt-btn" title="Configurações">&#9878;</button>
       </div>
-      <div id="console-output"></div>
-    </div>
-  </section>
-</main>
+      <div id="console">
+        <div class="console-header" id="console-toggle">
+          <span>Console</span>
+          <span id="console-arrow">&#9660;</span>
+        </div>
+        <div id="console-output"></div>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.36.3/src-min-noconflict/ace.js"></script>
 <script>
   // ============================================================
-  // Acode — página de teste web (autocontida)
-  // Reproduz o esqueleto da interface do Acode para testes
-  // no navegador, sem precisar compilar o app Android.
+  // Clone visual do Acode — só aparência, com interações básicas
   // ============================================================
 
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/monokai");
+  editor.setTheme("ace/theme/one_dark"); // tema padrão do app real
   editor.setOptions({
-    fontSize: "14px",
+    fontSize: "13px",
     showPrintMargin: false,
     tabSize: 2,
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: true
+    enableLiveAutocompletion: true,
+    showInvisibles: false
   });
 
-  // ---- Arquivos de demonstração (skeleton de projeto) ----
+  // Arquivos de exemplo (esqueleto típico de projeto aberto no app)
   var FILES = {
+    "www": null,
     "index.html": { mode: "ace/mode/html", content:
-'<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>Meu App</title>\n</head>\n<body>\n  <h1>Olá, Acode!</h1>\n  <script src="app.js"><\/script>\n</body>\n</html>' },
+'<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>Meu App</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>Olá, Acode!</h1>\n  <script src="app.js"><\/script>\n</body>\n</html>' },
     "app.js": { mode: "ace/mode/javascript", content:
-'// Teste rápido — clique em "Rodar" para executar no console\nfunction somar(a, b) {\n  return a + b;\n}\n\nconsole.log("Soma:", somar(2, 3));' },
+'// Clique em ▶ (Rodar) na barra de ferramentas\nfunction somar(a, b) {\n  return a + b;\n}\n\nconsole.log("Soma:", somar(2, 3));' },
     "style.css": { mode: "ace/mode/css", content:
-'body {\n  margin: 0;\n  font-family: sans-serif;\n  background: #1e1e1e;\n  color: #eee;\n}' },
-    "package.json": { mode: "ace/mode/json", content:
-'{\n  "name": "meu-projeto",\n  "version": "1.0.0",\n  "main": "app.js"\n}' },
+'body {\n  margin: 0;\n  font-family: sans-serif;\n  background: #20202c;\n  color: #eee;\n  text-align: center;\n  padding-top: 20vh;\n}' },
+    "config.xml": { mode: "ace/mode/xml", content:
+'<?xml version="1.0" encoding="utf-8"?>\n<widget id="com.foxdebug.acode" version="1.13.5">\n  <name>Acode</name>\n</widget>' },
     "README.md": { mode: "ace/mode/markdown", content:
-'# Meu projeto\n\nEditado no teste web do Acode.\n\n- Editor: Ace (mesmo motor clássico do Acode)\n- Tema: Monokai\n- Teste de console embutido' }
+'# Acode\n\nEditor de código para Android.\n\nClone visual para teste no navegador.' }
   };
 
   var openTabs = [];
@@ -234,11 +306,17 @@
   // ---- Árvore de arquivos ----
   var tree = document.getElementById("file-tree");
   Object.keys(FILES).forEach(function (name) {
+    var isFolder = FILES[name] === null;
     var row = document.createElement("div");
-    row.className = "tree-item";
-    row.innerHTML = '<span class="icon file">&lt;&gt;</span>' + name;
-    row.onclick = function () { openFile(name); };
-    row.dataset.file = name;
+    row.className = "tree-item" + (isFolder ? " indent-0" : " indent-1");
+    row.dataset.file = isFolder ? "" : name;
+    if (isFolder) {
+      row.innerHTML = '<span class="mi">&#128193;</span><b>' + name + '</b>';
+    } else {
+      row.className += " indent-1";
+      row.innerHTML = '<span class="mi">&#128196;</span>' + name;
+      row.onclick = function () { openFile(name); };
+    }
     tree.appendChild(row);
   });
 
@@ -250,6 +328,7 @@
 
   // ---- Abas ----
   function openFile(name) {
+    if (FILES[name] === null) return;
     if (openTabs.indexOf(name) === -1) openTabs.push(name);
     activeFile = name;
     var f = FILES[name];
@@ -283,14 +362,15 @@
     openTabs.forEach(function (name) {
       var tab = document.createElement("div");
       tab.className = "tab" + (name === activeFile ? " active" : "");
-      tab.innerHTML = name + ' <span class="close">×</span>';
+      tab.innerHTML = '<span class="mi" style="font-size:14px">&#128196;</span> ' + name +
+                      ' <span class="close">×</span>';
       tab.onclick = function () { openFile(name); };
       tab.querySelector(".close").onclick = function (ev) { closeFile(name, ev); };
       tabs.appendChild(tab);
     });
   }
 
-  // ---- Console ----
+  // ---- Console + toast ----
   function log(msg, cls) {
     var out = document.getElementById("console-output");
     var line = document.createElement("div");
@@ -299,52 +379,88 @@
     out.appendChild(line);
     out.scrollTop = out.scrollHeight;
   }
+  var toastTimer = null;
+  function toast(msg) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("show"); }, 1800);
+  }
 
-  // Rodar: executa o conteúdo do editor JS num escopo controlado
-  document.getElementById("btn-run").onclick = function () {
+  // ---- Ações ----
+  function runFile() {
     if (!activeFile) { log("Nenhum arquivo aberto.", "err"); return; }
-    log("▶ Executando " + activeFile + "...", "ok");
-    var fakeConsole = {
-      log: function () {
-        log("[log] " + Array.prototype.slice.call(arguments).map(String).join(" "), "log");
-      },
-      error: function () {
-        log("[erro] " + Array.prototype.slice.call(arguments).map(String).join(" "), "err");
-      },
-      warn: function () {
-        log("[aviso] " + Array.prototype.slice.call(arguments).map(String).join(" "), "err");
-      }
-    };
     if (!/\.js$/.test(activeFile)) {
-      log("Apenas arquivos .js podem ser executados aqui.", "err");
+      log("Apenas arquivos .js são executados no teste.", "err");
       return;
     }
+    log("▶ Executando " + activeFile + "...");
+    var fakeConsole = {
+      log: function () { log("[log] " + [].map.call(arguments, String).join(" "), "log"); },
+      error: function () { log("[erro] " + [].map.call(arguments, String).join(" "), "err"); },
+      warn: function () { log("[aviso] " + [].map.call(arguments, String).join(" "), "err"); }
+    };
     try {
       new Function("console", editor.getValue())(fakeConsole);
       log("✓ Concluído.", "ok");
     } catch (e) {
       log("✗ " + e.message, "err");
     }
+  }
+
+  document.getElementById("qt-run").onclick = runFile;
+  document.getElementById("btn-save").onclick = function () {
+    toast("Arquivo salvo (simulado)");
+    log("✓ Salvo: " + (activeFile || "nenhum"), "ok");
   };
+  document.getElementById("btn-new").onclick = function () { toast("Novo arquivo (simulado)"); };
+  document.getElementById("btn-search").onclick = function () { toast("Buscar (simulado)"); };
+  document.getElementById("btn-menu").onclick = function () { toast("Mais opções (simulado)"); };
 
   // ---- UI ----
   document.getElementById("btn-sidebar").onclick = function () {
     document.getElementById("sidebar").classList.toggle("hidden");
-    setTimeout(function () { editor.resize(); }, 220);
+    setTimeout(function () { editor.resize(); }, 230);
   };
   document.getElementById("console-toggle").onclick = function () {
     var c = document.getElementById("console");
     c.classList.toggle("collapsed");
-    document.getElementById("console-arrow").textContent =
-      c.classList.contains("collapsed") ? "▲" : "▼";
-    setTimeout(function () { editor.resize(); }, 220);
+    document.getElementById("console-arrow").innerHTML =
+      c.classList.contains("collapsed") ? "&#9650;" : "&#9660;";
+    setTimeout(function () { editor.resize(); }, 230);
   };
   window.addEventListener("resize", function () { editor.resize(); });
 
-  // ---- Início ----
-  log("Acode — teste web carregado.", "ok");
-  log("Abra um arquivo na barra lateral e clique em Rodar.");
-  openFile("app.js");
+  // ---- Sequência de carregamento (splash → app) ----
+  var splashMsgs = [
+    "Carregando arquivos...",
+    "Iniciando editor...",
+    "Pronto!"
+  ];
+  var msgIndex = 0;
+  var msgTimer = setInterval(function () {
+    msgIndex++;
+    if (msgIndex < splashMsgs.length) {
+      document.querySelector(".splash-message").textContent = splashMsgs[msgIndex];
+    }
+  }, 800);
+
+  setTimeout(function () {
+    clearInterval(msgTimer);
+    document.getElementById("splash").classList.add("hide");
+    document.getElementById("app").classList.add("show");
+    document.body.classList.remove("loading");
+    setTimeout(function () {
+      var s = document.getElementById("splash");
+      if (s && s.parentNode) s.parentNode.removeChild(s);
+      editor.resize();
+    }, 400);
+    log("Acode v1.13.5 — clone de teste carregado.", "ok");
+    log("Abra um arquivo na barra lateral e toque em ▶ para rodar.");
+    openFile("app.js");
+    openFile("index.html");
+  }, 2600);
 </script>
 </body>
 </html>
