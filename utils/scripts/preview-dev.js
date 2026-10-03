@@ -22,7 +22,7 @@
 const fs = require("node:fs");
 const http = require("node:http");
 const path = require("node:path");
-const { spawn } = require("node:child_process");
+const { spawn, execFileSync } = require("node:child_process");
 
 const ROOT = path.resolve(__dirname, "../..");
 const WWW = path.join(ROOT, "www");
@@ -31,6 +31,7 @@ const PLATFORM_WWW = path.join(ROOT, "platforms", "browser", "www");
 const SHIM_PATH = path.join(ROOT, "utils", "browser-preview", "cordova-shim.js");
 const SHIM_URL = "/__acode-browser-shim.js";
 const RELOAD_URL = "/__acode-livereload";
+const CORDOVA_BIN = path.join(ROOT, "node_modules", "cordova", "bin", "cordova");
 const HOST = "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 
@@ -58,13 +59,27 @@ function log(...args) {
 	console.log(`[preview]`, ...args);
 }
 
+function runCordova(args) {
+	log(`cordova ${args.join(" ")}`);
+	execFileSync(process.execPath, [CORDOVA_BIN, ...args], {
+		cwd: ROOT,
+		stdio: "inherit",
+	});
+}
+
+/**
+ * `platforms/` is gitignored, so a fresh checkout has no browser platform.
+ * Regenerate it (cordova.js, cordova_plugins.js and the plugin modules this
+ * server copies into www/) the first time the preview starts.
+ */
+function ensureCordovaRuntime() {
+	if (fs.existsSync(path.join(PLATFORM_WWW, "cordova.js"))) return;
+	runCordova(["platform", "add", "browser", "--nosave"]);
+	runCordova(["prepare", "browser"]);
+}
+
 function copyCordovaRuntime() {
-	if (!fs.existsSync(PLATFORM_WWW)) {
-		log(
-			"platforms/browser/www is missing — run `cordova platform add browser --nosave` first",
-		);
-		process.exit(1);
-	}
+	ensureCordovaRuntime();
 
 	for (const name of CORDOVA_RUNTIME) {
 		const source = path.join(PLATFORM_WWW, name);
@@ -137,13 +152,17 @@ function watchBundle() {
  * Static server
  * -------------------------------------------------------------- */
 
+const CORDOVA_TAG = /<script\s+src=["'](?:\.\/)?cordova\.js["']\s*><\/script>/i;
+
+/**
+ * Load the shim right after `cordova.js` (so `window.cordova` and the exec
+ * proxy module exist when it runs) and never add a second copy of it.
+ */
 function injectShim(html) {
+	if (html.includes(SHIM_URL)) return html;
 	const tag = `<script src="${SHIM_URL}"></script>`;
-	if (html.includes("cordova.js")) {
-		return html.replace(
-			"</head>",
-			`  <script src="cordova.js"></script>\n  ${tag}\n</head>`,
-		);
+	if (CORDOVA_TAG.test(html)) {
+		return html.replace(CORDOVA_TAG, (match) => `${match}\n  ${tag}`);
 	}
 	return html.replace("</head>", `  ${tag}\n</head>`);
 }

@@ -580,7 +580,9 @@
 				versionCode: window.BuildInfo.versionCode,
 			}),
 		"get-app-info": (onSuccess) => systemProxy.getAppInfo(onSuccess),
-		getGlobalSetting: (onSuccess, onError) => onError("unsupported in browser preview"),
+		// Android global settings (e.g. `animator_duration_scale`); the browser
+		// preview always animates.
+		getGlobalSetting: (onSuccess) => onSuccess("1.0"),
 		fileExists: (onSuccess, onError, args) => {
 			ensureLoaded().then(() => onSuccess(store.has(toPath(args[0]))));
 		},
@@ -625,6 +627,34 @@
 		setIntentHandler: (onSuccess) => onSuccess(true),
 		getCordovaIntent: (onSuccess) => onSuccess(null),
 		getRewardStatus: (onSuccess) => onSuccess({ adsRequired: 0 }),
+		redeemReward: (onSuccess) => onSuccess(true),
+		extractAsset: (onSuccess) => onSuccess(true),
+		copyToUri: (onSuccess) => onSuccess(true),
+		createSymlink: (onSuccess) => onSuccess(true),
+		fileAction: (onSuccess) => onSuccess(true),
+		launchApp: (onSuccess) => onSuccess(true),
+		setAppIcon: (onSuccess) => onSuccess(true),
+		addShortcut: (onSuccess) => onSuccess(true),
+		removeShortcut: (onSuccess) => onSuccess(true),
+		pinShortcut: (onSuccess) => onSuccess(true),
+		pinFileShortcut: (onSuccess) => onSuccess(true),
+		manageAllFiles: (onSuccess) => onSuccess(true),
+		// The preview works on emulated storage, so it never holds Android's
+		// "all files access" grant.
+		isExternalStorageManager: (onSuccess) => onSuccess(false),
+		requestPermission: (onSuccess) => onSuccess(1),
+		requestPermissions: (onSuccess, onError, args) => {
+			const granted = {};
+			(Array.isArray(args[0]) ? args[0] : []).forEach((permission) => {
+				granted[permission] = true;
+			});
+			onSuccess(granted);
+		},
+		inAppBrowser: (onSuccess, onError, args) => {
+			window.open(args[0], "_blank", "noopener");
+		},
+		"http-stream-cancel": (onSuccess) => onSuccess(true),
+		"http-stream-ack": (onSuccess) => onSuccess(true),
 	};
 
 	const sdcardProxy = {
@@ -732,6 +762,133 @@
 		},
 	};
 
+	/* ------------------------------------------------------------------ *
+	 * In-app purchases (a browser has no billing service)
+	 * ------------------------------------------------------------------ */
+
+	const iapProxy = {
+		getProducts: (onSuccess) => onSuccess([]),
+		getPurchases: (onSuccess) => onSuccess([]),
+		setPurchaseUpdatedListener: (onSuccess) => onSuccess(true),
+		// 3 = BILLING_UNAVAILABLE, so the app falls back to the free tier.
+		startConnection: (onSuccess, onError) => onError(3),
+		purchase: (onSuccess, onError) => onError(3),
+		consume: (onSuccess, onError) => onError(6),
+		acknowledgePurchase: (onSuccess, onError) => onError(6),
+	};
+
+	/* ------------------------------------------------------------------ *
+	 * cordova-plugin-advanced-http, backed by fetch
+	 * ------------------------------------------------------------------ */
+
+	function normalizeHeaders(headers) {
+		const result = {};
+		Object.entries(headers || {}).forEach(([name, value]) => {
+			if (value !== undefined && value !== null) result[name] = String(value);
+		});
+		return result;
+	}
+
+	/**
+	 * `sendRequest` sends `[url, data, serializer, headers, ..., responseType, id]`
+	 * for post/put/patch and `[url, headers, ..., responseType, id]` for the rest.
+	 * `json` and `blob` bodies are decoded by the plugin's own JS wrapper.
+	 */
+	function httpHandler(method, withBody) {
+		return (onSuccess, onError, args) => {
+			const headers = normalizeHeaders(withBody ? args[3] : args[1]);
+			const responseType = args[withBody ? 7 : 5];
+			const init = { method, headers };
+
+			if (withBody && args[1] !== undefined && args[1] !== null) {
+				const serialized = typeof args[1] === "object" && args[2] !== "utf8";
+				init.body = serialized ? JSON.stringify(args[1]) : String(args[1]);
+				if (!headers["Content-Type"]) {
+					headers["Content-Type"] = serialized ? "application/json" : "text/plain";
+				}
+			}
+
+			fetch(args[0], init).then(
+				async (response) => {
+					let data;
+					if (responseType === "arraybuffer") {
+						data = await response.arrayBuffer();
+					} else if (responseType === "blob") {
+						data = await response.blob();
+					} else {
+						data = await response.text();
+					}
+					onSuccess({
+						status: response.status,
+						data,
+						headers: Object.fromEntries(response.headers.entries()),
+						url: response.url,
+					});
+				},
+				(error) => onError(String((error && error.message) || error)),
+			);
+		};
+	}
+
+	const httpProxy = {
+		get: httpHandler("GET", false),
+		head: httpHandler("HEAD", false),
+		delete: httpHandler("DELETE", false),
+		post: httpHandler("POST", true),
+		put: httpHandler("PUT", true),
+		patch: httpHandler("PATCH", true),
+		uploadFiles: (onSuccess, onError) =>
+			onError("file upload is unsupported in the browser preview"),
+		downloadFile: (onSuccess, onError) =>
+			onError("file download is unsupported in the browser preview"),
+		setServerTrustMode: (onSuccess) => onSuccess(true),
+		setClientAuthMode: (onSuccess) => onSuccess(true),
+		setCookie: (onSuccess) => onSuccess(true),
+		getCookieString: (onSuccess) => onSuccess(document.cookie),
+		clearCookies: (onSuccess) => onSuccess(true),
+		removeCookies: (onSuccess) => onSuccess(true),
+		abort: (onSuccess) => onSuccess(true),
+	};
+
+	/* ------------------------------------------------------------------ *
+	 * Proxy registration
+	 * ------------------------------------------------------------------ */
+
+	function normalizeAction(action) {
+		return String(action)
+			.toLowerCase()
+			.replace(/[-_\s]/g, "");
+	}
+
+	/**
+	 * Cordova looks a handler up by the exact action name, but the app mixes
+	 * camelCase and kebab-case (`getAppInfo` / `get-android-version`), so every
+	 * service is wrapped to also match a normalized name, and unknown actions
+	 * answer with a benign no-op instead of Cordova's "Missing Command Error".
+	 */
+	function serviceProxy(service, handlers) {
+		const byName = new Map();
+		for (const [action, handler] of Object.entries(handlers)) {
+			byName.set(normalizeAction(action), handler);
+		}
+		const reported = new Set();
+		return new Proxy(handlers, {
+			get(target, action) {
+				if (typeof action !== "string") return target[action];
+				if (action in target) return target[action];
+				const handler = byName.get(normalizeAction(action));
+				if (handler) return handler;
+				return (onSuccess) => {
+					if (!reported.has(action)) {
+						reported.add(action);
+						log(`${service}.${action} is not emulated in the browser preview`);
+					}
+					if (typeof onSuccess === "function") onSuccess(true);
+				};
+			},
+		});
+	}
+
 	function registerProxies() {
 		if (!window.cordova || !window.cordova.require) return;
 		let proxy;
@@ -743,9 +900,11 @@
 		}
 		// Cordova resolves a proxy by service + action, so each service is
 		// registered as a map of action name -> handler.
-		proxy.add("System", systemProxy);
-		proxy.add("SDcard", sdcardProxy);
-		proxy.add("Clipboard", clipboardProxy);
+		proxy.add("System", serviceProxy("System", systemProxy));
+		proxy.add("SDcard", serviceProxy("SDcard", sdcardProxy));
+		proxy.add("Clipboard", serviceProxy("Clipboard", clipboardProxy));
+		proxy.add("Iap", serviceProxy("Iap", iapProxy));
+		proxy.add("CordovaHttpPlugin", serviceProxy("CordovaHttpPlugin", httpProxy));
 	}
 
 	registerProxies();

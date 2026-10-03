@@ -1,0 +1,35 @@
+# Base44 development environment for Acode (Android/Cordova app).
+#
+# Acode ships as an Android app, but its UI and business logic are a plain web
+# bundle. The `preview` service runs `utils/scripts/preview-dev.js`, which
+# compiles `src/` with rspack in watch mode, serves the result on port 3000 and
+# injects `utils/browser-preview/cordova-shim.js` to emulate the native layer.
+#
+# Everything runs from the bind-mounted checkout (no prebuilt image), so edits
+# to the source are picked up by the rspack watcher.
+
+services:
+  preview:
+    image: node:22
+    working_dir: /app
+    command:
+      - sh
+      - -ec
+      - |
+        if [ ! -d node_modules/@rspack/core ]; then
+          npm ci --no-audit --no-fund
+        fi
+        exec node utils/scripts/preview-dev.js
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 120s
+    restart: on-failure
