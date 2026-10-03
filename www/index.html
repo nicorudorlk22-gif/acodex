@@ -38,17 +38,45 @@
       inset: 0;
       z-index: 999999;
 
-      background-image: url("./logo.svg");
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: 180px;
       background-color: var(--bg-color);
 
       text-align: center;
 
-      /* Disable any possible fade */
+      /* Disable any possible fade on the splash container itself */
       animation: none !important;
       transition: none !important;
+    }
+
+    #splash-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 180px;
+      height: 180px;
+      margin-top: -90px;
+      margin-left: -90px;
+
+      background-image: url("./splash-logo.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 140px;
+
+      animation: splashPulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes splashPulse {
+      0% {
+        transform: scale(0.92);
+        opacity: 0.75;
+      }
+      50% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.92);
+        opacity: 0.75;
+      }
     }
 
     .splash-version {
@@ -193,6 +221,7 @@
 
 <body class="loading" data-version="" data-small-msg="">
   <div id="splash">
+    <div id="splash-logo"></div>
     <div class="splash-version"></div>
     <div class="splash-message"></div>
   </div>
