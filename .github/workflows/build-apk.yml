@@ -1,0 +1,76 @@
+name: Build APK (Acode)
+
+# Gera um APK de DEBUG instalável usando o SDK Android já incluso
+# nos runners do GitHub Actions. Roda sem PC: o build acontece na
+# nuvem e o APK fica publicado na release "latest-apk".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-apk-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          cache: "npm"
+
+      - name: Install Cordova + dependencies
+        run: |
+          npm install
+          npm install -g cordova
+          npm run setup
+
+      - name: Allow storage permission (non-interactive)
+        run: node utils/storage_manager.mjs y
+
+      - name: Build debug APK
+        run: npm run build paid dev apk
+
+      - name: Locate APK
+        id: apk
+        run: |
+          APK_PATH=$(find platforms/android/app/build/outputs/apk -name "*.apk" | head -n1)
+          echo "path=$APK_PATH" >> "$GITHUB_OUTPUT"
+          cp "$APK_PATH" "acode-debug.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: acode-debug-apk
+          path: acode-debug.apk
+          retention-days: 30
+
+      - name: Create/update "latest-apk" release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest-apk
+          name: "Acode — último APK de debug"
+          prerelease: true
+          body: |
+            APK de debug gerado automaticamente a partir do commit ${{ github.sha }}.
+            Instale direto no Android (ative "fontes desconhecidas" se o sistema pedir).
+          files: acode-debug.apk
