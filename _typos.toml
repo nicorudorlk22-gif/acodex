@@ -3,6 +3,7 @@ check-filename = true
 
 [files]
 extend-exclude = [
+    "testes",
     "node_modules",
     "codemirror-lsp-client",
     "www",
