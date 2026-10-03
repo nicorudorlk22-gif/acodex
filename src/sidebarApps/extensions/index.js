@@ -61,7 +61,7 @@ const $header = (
 			oninput={searchPlugin}
 			type="search"
 			name="search-ext"
-			placeholder="Search"
+			placeholder={strings["search"]}
 		/>
 	</div>
 );
