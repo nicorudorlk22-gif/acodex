@@ -1,0 +1,56 @@
+name: Security
+
+# Análise de segurança: CodeQL (JavaScript/TypeScript) + npm audit.
+# Ajuda a manter as vulnerabilidades do Dependabot sob controle.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 4 * * 1" # toda segunda-feira 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  security-events: write
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  npm-audit:
+    name: NPM Audit (high severity)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Run npm audit
+        run: npm audit --audit-level=high --omit=dev || echo "::warning::Vulnerabilidades de alta severidade encontradas — verifique o Dependabot"

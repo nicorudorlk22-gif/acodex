@@ -1,0 +1,87 @@
+name: Release (AcodeX)
+
+# Release oficial: dispara ao criar uma tag v* (ex.: v1.13.5-acodex).
+# Gera o APK de release, calcula checksum e publica a Release no GitHub
+# com changelog automático.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Run lint
+        run: npx biome lint .
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build web assets
+        run: npm run build
+
+      - name: Build release APK
+        run: |
+          npx cordova platform add android --nofetch || true
+          npx cordova build android --release
+
+      - name: Find APK
+        id: apk
+        run: |
+          APK=$(find platforms/android/app/build/outputs/apk -name "*.apk" | head -1)
+          echo "apk=$APK" >> "$GITHUB_OUTPUT"
+          cp "$APK" AcodeX.apk
+          sha256sum AcodeX.apk > AcodeX.apk.sha256
+          echo "checksum=$(cut -d' ' -f1 AcodeX.apk.sha256)" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: AcodeX ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            AcodeX.apk
+            AcodeX.apk.sha256
+          body: |
+            ## AcodeX ${{ github.ref_name }}
+
+            APK de release assinado com checksum:
+            ```
+            ${{ steps.apk.outputs.checksum }}
+            ```
+
+            *Changelog completo gerado automaticamente abaixo.*

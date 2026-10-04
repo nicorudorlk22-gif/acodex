@@ -1,4 +1,4 @@
-name: Build APK (Acode)
+name: Build APK (AcodeX)
 
 # Gera um APK de DEBUG instalável usando o SDK Android já incluso
 # nos runners do GitHub Actions. Roda sem PC: o build acontece na
