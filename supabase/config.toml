@@ -8,7 +8,7 @@ project_id = "acodex"
 [api]
 enabled = true
 port = 54321
-schemas = ["public", "storage", "graphql_public"]
+schemas = ["public", "graphql_public"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 
@@ -46,3 +46,5 @@ enabled = true
 
 # Não alterar manualmente objetos internos do Realtime
 # (realtime.subscription, realtime.schema_migrations) — ver issue #24
+# Nota: schema "storage" fora de [api].schemas por revisao do agente Supabase
+# (nao expor tabelas de storage pela Data API sem necessidade). Ver issue #24.
