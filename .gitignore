@@ -24,3 +24,9 @@ tsconfig.tsbuildinfo
 /www/cordova.js
 /www/cordova_plugins.js
 .pnpm-store/
+# Arquivos privados — NUNCA commitar
+.env
+.env.*
+!.env.example
+*.local.json
+secrets/
