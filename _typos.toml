@@ -48,6 +48,12 @@ extend-exclude = [
 ]
 
 [default.extend-words]
+# portugues usado nas strings do Acodex AI
+comando = "comando"
+comandos = "comandos"
+Informe = "Informe"
+Limite = "Limite"
+Erro = "Erro"
 # temporary thing to staisfy the linter
 strech = "strech"
 contaienr = "contaienr"
