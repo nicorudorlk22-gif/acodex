@@ -1,0 +1,48 @@
+# Configuração do Supabase CLI para o Acodex
+# Uso local: `npx supabase start` (precisa do Docker)
+# Referência: https://supabase.com/docs/guides/local-development/cli/config
+# Contexto: issue #24 (integração Supabase + ponte entre agentes)
+
+project_id = "acodex"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54323
+major_version = 15
+
+[studio]
+enabled = true
+port = 54324
+
+[inbucket]
+enabled = true
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+file_size_limit = "50MiB"
+
+[auth]
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://rlkbiloga-coder.github.io/acode_original/"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_anonymous_sign_ins = false
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[realtime]
+enabled = true
+
+# Não alterar manualmente objetos internos do Realtime
+# (realtime.subscription, realtime.schema_migrations) — ver issue #24
