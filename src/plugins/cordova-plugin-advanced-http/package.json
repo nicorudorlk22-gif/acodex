@@ -34,12 +34,9 @@
     "ssl",
     "tls"
   ],
-  "engines": [
-    {
-      "name": "cordova",
-      "version": ">=4.0.0"
-    }
-  ],
+  "engines": {
+    "cordova": ">=4.0.0"
+  },
   "author": "Wymsee",
   "contributors": [
     "devgeeks",
