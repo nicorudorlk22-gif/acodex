@@ -1,48 +1,40 @@
-# Acode - Code Editor for Android
+# AcodeX - IDE • Code • Build
 
 <p align="center">
   <img src='res/logo_1.png' width='250'>
 </p>
 
-[![](https://img.shields.io/endpoint?logo=telegram&label=Acode&style=flat&url=https%3A%2F%2Facode.app%2Fapi%2Ftelegram-members-count)](https://t.me/foxdebug_acode) [![](https://dcbadge.vercel.app/api/server/vVxVWYUAWD?style=flat)](https://discord.gg/vVxVWYUAWD)
-
 ## • Overview
 
-Welcome to Acode Editor - a powerful and versatile code editing tool designed specifically for Android devices. Whether you're working on HTML, CSS, JavaScript, or other programming languages, Acode empowers you to code on-the-go with confidence.
+AcodeX é um editor de código e IDE completo para Android, construído a partir do projeto Acode. Edite HTML, CSS, JavaScript, Python, Java e dezenas de outras linguagens direto do seu celular, com terminal embutido, suporte a plugins e um fluxo de build pensado para quem programa em movimento.
 
 ## • Features
 
-- Edit and create websites, and instantly preview them in a browser.
-- Seamlessly modify source files for various languages like Python, Java, JavaScript, and more.
-- Built-in javascript console
-- S/FTP and SSH terminal integration
-- Built-in terminal(Alpine)
-- Enjoy multi-language editing support with easy management tools.
-- Enjoy a large collections of community plugins to enhance your coding experience.
-
-## • Installation
-
-You can get Acode Editor from popular platforms:
-
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" alt="Get it on Google Play" height="60">](https://play.google.com/store/apps/details?id=com.foxdebug.acodefree) [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60"/>](https://www.f-droid.org/packages/com.foxdebug.acode/)
+- Edite e crie sites, com preview instantâneo no navegador.
+- Edição de código-fonte para Python, Java, JavaScript e muitas outras linguagens.
+- Console JavaScript embutido.
+- Integração S/FTP e terminal SSH.
+- Terminal embutido (Alpine).
+- Suporte multi-idioma com ferramentas de gerenciamento simples.
+- Grande coleção de plugins da comunidade para expandir o editor.
 
 ## • Project Structure
 
 <pre>
-Acode/
+AcodeX/
 |
-|- src/   - Core code and language files
+|- src/   - Código principal e arquivos de idioma
 |
-|- www/   - Public documents, compiled files, and HTML templates
+|- www/   - Documentos públicos, arquivos compilados e templates HTML
 |
-|- utils/ - CLI tools for building, string manipulation, and more
+|- utils/ - Ferramentas de CLI para build, manipulação de strings e mais
 |
-|- codemirror-lsp-client/ - Git submodule providing @codemirror/lsp-client (clone with --recurse-submodules)
+|- codemirror-lsp-client/ - Submódulo git fornecendo @codemirror/lsp-client (clone com --recurse-submodules)
 </pre>
 
 ## • Multi-language Support
 
-Enhance Acode's capabilities by adding new languages easily. Just create a file with the language code (e.g., en-us for English) in [`src/lang/`](https://github.com/Acode-Foundation/Acode/tree/main/src/lang) and include it in [`src/lib/lang.js`](https://github.com/Acode-Foundation/Acode/blob/main/src/lib/lang.js). Manage strings across languages effortlessly using utility commands:
+Adicione novos idiomas facilmente criando um arquivo com o código do idioma (ex.: en-us para inglês) em `src/lang/` e incluindo-o em `src/lib/lang.js`. Gerencie strings entre idiomas com comandos utilitários:
 
 ```shell
 pnpm run lang add
@@ -53,26 +45,16 @@ pnpm run lang update
 
 ## • Contributing & Building the Application
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
+Veja CONTRIBUTING.md para instruções detalhadas de build e contribuição.
 
-## • Contributors
+## • Developing a Plugin for AcodeX
 
-<a href="https://github.com/Acode-Foundation/Acode/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Acode-Foundation/Acode" />
-</a>
+AcodeX mantém compatibilidade com o sistema de plugins do Acode. Para documentação completa sobre criação de plugins, veja o repositório https://github.com/Acode-Foundation/acode-plugin e a documentação em https://docs.acode.app/
 
-## • Developing a Plugin for Acode
+## • Créditos
 
-For comprehensive documentation on creating plugins for Acode Editor, visit the [repository](https://github.com/Acode-Foundation/acode-plugin).
+AcodeX é baseado no projeto open-source Acode, da Foxdebug / Acode Foundation (https://github.com/Acode-Foundation/Acode), distribuído sob licença MIT. Agradecimentos a toda a comunidade de contribuidores do projeto original.
 
-For plugin development information, refer to: [Acode Plugin Documentation](https://docs.acode.app/)
+## License
 
-## Star History
-
-<a href="https://star-history.com/#Acode-Foundation/Acode&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Acode-Foundation/Acode&type=Date" />
- </picture>
-</a>
+Este projeto é distribuído sob a licença MIT. Veja license.txt para detalhes.
