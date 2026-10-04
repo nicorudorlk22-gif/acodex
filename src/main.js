@@ -645,7 +645,7 @@ async function loadApp() {
 	);
 	const $header = tile({
 		type: "header",
-		text: "Acode",
+		text: "Acodex",
 		lead: $navToggler,
 		tail: $menuToggler,
 	});

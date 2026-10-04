@@ -1,6 +1,6 @@
 {
   "name": "com.foxdebug.acode",
-  "displayName": "Acode",
+  "displayName": "Acodex",
   "version": "1.13.5",
   "description": "Acode is a code editor for android",
   "scripts": {
@@ -214,7 +214,12 @@
     "@codemirror/view": "^6.43.9",
     "@lezer/common": "^1.5.2",
     "@lezer/lr": "^1.4.10",
-    "tar": "^7.5.22"
+    "tar": "^7.5.22",
+    "lodash": "^4.18.1",
+    "nanoid@3": "^3.3.19",
+    "serialize-javascript": "^7.1.2",
+    "js-yaml@4": "^4.3.2",
+    "minimatch@3": "^3.1.5"
   },
   "browserslist": "cover 100%",
   "allowScripts": {
