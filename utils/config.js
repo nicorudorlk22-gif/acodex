@@ -23,8 +23,8 @@ const PLUGIN_COMMAND_ENV = Object.freeze({
 const LOGO_TEXT = {
 	paid: `<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#3a3e54</color>
-    <color name="ic_splash_background">#3a3e54</color>
+    <color name="ic_launcher_background">#000000</color>
+    <color name="ic_splash_background">#000000</color>
 </resources>`,
 	free: `<?xml version="1.0" encoding="utf-8"?>
 <resources>
