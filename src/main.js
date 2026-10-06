@@ -41,6 +41,7 @@ import actionStack from "lib/actionStack";
 import adRewards from "lib/adRewards";
 import ajax from "lib/ajax";
 import applySettings from "lib/applySettings";
+import initBreadcrumbs from "lib/breadcrumbs";
 import checkFiles from "lib/checkFiles";
 import { canSaveFile } from "lib/commands";
 import config from "lib/config";
@@ -53,7 +54,9 @@ import lang from "lib/lang";
 import loadPlugins from "lib/loadPlugins";
 import Logger from "lib/logger";
 import notificationManager from "lib/notificationManager";
+import showOnboarding from "lib/onboarding";
 import openFolder, { addedFolder } from "lib/openFolder";
+import registerExtendedCommands from "lib/registerExtendedCommands";
 import { registerPrettierFormatter } from "lib/registerPrettierFormatter";
 import restoreFiles from "lib/restoreFiles";
 import settings from "lib/settings";
@@ -716,6 +719,9 @@ async function loadApp() {
 	//#region Add event listeners
 	initModes();
 	quickToolsInit();
+	registerExtendedCommands({ toast: window.toast });
+	initBreadcrumbs($header);
+	showOnboarding();
 	editorManager.on("switch-file", initIconTooltips());
 	sidebarApps.init($sidebar);
 	await sidebarApps.loadApps();
