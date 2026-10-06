@@ -315,3 +315,13 @@ body.resizing-editor-pane {
     padding: 0.35rem 0.4rem 0.2rem;
   }
 }
+
+/* AI inline completion (ghost text) */
+.cm-ai-ghost {
+	color: var(--editor-text-disabled, rgb(128, 128, 128));
+	opacity: 0.55;
+	font-style: italic;
+	pointer-events: none;
+	user-select: none;
+	white-space: pre-wrap;
+}

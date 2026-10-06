@@ -117,6 +117,15 @@ export default function otherSettings() {
 			category: categories.interface,
 		},
 		{
+			key: "aiGhostText",
+			text: strings["ai ghost text"] || "AI inline suggestions",
+			checkbox: values.aiGhostText,
+			info:
+				strings["settings-info-ai-ghost-text"] ||
+				"Show gray AI completion suggestions in the editor. Configure the AI key in the AI sidebar. Accept with Tab.",
+			category: categories.interface,
+		},
+		{
 			key: "showSponsorSidebarApp",
 			text: `${strings.sponsor} (${strings.sidebar})`,
 			checkbox: values.showSponsorSidebarApp,

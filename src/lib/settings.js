@@ -204,6 +204,8 @@ class Settings {
 			aiBaseUrl: "https://ai-gateway.vercel.sh/v1",
 			aiApiKey: "",
 			aiModel: "openai/gpt-5-mini",
+			aiGhostText: false,
+			aiCommandsEnabled: true,
 			showAnnotations: false,
 			lintGutter: true,
 			indentGuides: false,

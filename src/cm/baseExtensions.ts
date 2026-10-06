@@ -16,6 +16,7 @@ import { highlightSelectionMatches } from "@codemirror/search";
 import type { Extension } from "@codemirror/state";
 import { EditorState, Prec } from "@codemirror/state";
 import indentationFolding from "./indentationFolding";
+import aiInlineCompletion from "./aiInlineCompletion.js";
 import {
 	crosshairCursor,
 	drawSelection,
@@ -54,6 +55,7 @@ export default function createBaseExtensions(
 	const extensions: Extension[] = [
 		highlightSpecialChars(),
 		history(),
+		aiInlineCompletion(),
 	];
 
 	if (enableHighlightActiveLine) extensions.push(highlightActiveLineGutter());
