@@ -80,9 +80,7 @@ export async function runAiCommand(commandId, code, filename) {
 	if (!command) throw new Error(`Unknown AI command: ${commandId}`);
 	const { aiBaseUrl, aiApiKey, aiModel } = appSettings.value;
 	if (!aiApiKey?.trim()) {
-		throw new Error(
-			"Configure your AI key in the AI sidebar settings first",
-		);
+		throw new Error("Configure your AI key in the AI sidebar settings first");
 	}
 	const message = await createChatCompletion({
 		config: { baseUrl: aiBaseUrl, apiKey: aiApiKey, model: aiModel },
