@@ -1,4 +1,5 @@
 import "./style.scss";
+import "./modelSwitcher.scss";
 import confirm from "dialogs/confirm";
 import multiPrompt from "dialogs/multiPrompt";
 import { runAgent } from "lib/acodexAi/agent";
@@ -9,6 +10,7 @@ import EditorFile from "lib/editorFile";
 import openFile from "lib/openFile";
 import appSettings from "lib/settings";
 import { splitMarkdownCode } from "./format";
+import { createModelSwitcher } from "./modelSwitcher";
 
 const TOOL_LABELS = {
 	get_active_file: "Lendo arquivo ativo",
@@ -94,10 +96,22 @@ function initApp(el) {
 		</button>
 	);
 
+	const switcher = createModelSwitcher({
+		getConfig,
+		onSelect: async (modelId, baseUrl) => {
+			const patch = { aiModel: modelId };
+			if (baseUrl && baseUrl !== appSettings.value.aiBaseUrl) {
+				patch.aiBaseUrl = baseUrl;
+			}
+			await appSettings.update(patch, false);
+		},
+	});
+
 	el.content = (
 		<div className="header">
 			<div className="title">
 				<span>Acodex AI</span>
+				{switcher.$toggle}
 				<span className="actions">
 					<button
 						type="button"
