@@ -216,3 +216,99 @@
   .ai-input {
     overflow-y: auto;
   }
+
+  /* realce de sintaxe */
+  .ai-code code {
+    display: block;
+    overflow-x: auto;
+    padding: 8px 10px;
+  }
+
+  .ai-code-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 2px 8px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .ai-code-lang {
+    margin-right: auto;
+    opacity: 0.6;
+    font-size: 0.75em;
+    text-transform: lowercase;
+  }
+
+  .tok-comment {
+    opacity: 0.55;
+    font-style: italic;
+  }
+
+  .tok-string {
+    color: #a5d6a7;
+  }
+
+  .tok-number {
+    color: #fdd835;
+  }
+
+  .tok-keyword {
+    color: #64b5f6;
+  }
+
+  .tok-bool {
+    color: #ce93d8;
+  }
+
+  .tok-fn {
+    color: #4dd0e1;
+  }
+
+  .ai-inline-code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(128, 128, 128, 0.15);
+  }
+
+  /* cursor de streaming */
+  .ai-msg.assistant.ai-live .ai-msg-body::after {
+    content: "▍";
+    opacity: 0.7;
+    animation: ai-caret 0.9s steps(2) infinite;
+  }
+
+  @keyframes ai-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* barra de comandos slash */
+  .ai-hints {
+    display: none;
+    max-height: 180px;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .ai-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: var(--primary-text-color, inherit);
+    text-align: start;
+
+    code {
+      min-width: 72px;
+    }
+
+    span {
+      opacity: 0.65;
+      font-size: 0.85em;
+    }
+  }

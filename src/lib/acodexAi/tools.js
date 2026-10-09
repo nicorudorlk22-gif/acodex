@@ -169,6 +169,57 @@ export function createToolRegistry(deps) {
 				return { ok: true };
 			},
 		},
+		search_open_files: {
+			description:
+				"Search for a text (or regular expression) across all open editor files. Returns the file, line number and matching line for each hit (max 40).",
+			parameters: {
+				type: "object",
+				properties: {
+					query: { type: "string", description: "Text or regex to find." },
+					regex: { type: "boolean", description: "Treat the query as a regular expression." },
+				},
+				required: ["query"],
+			},
+			run({ query, regex = false }) {
+				if (!query) return { error: "query required." };
+				let matcher = null;
+				if (regex) {
+					try {
+						matcher = new RegExp(query, "gi");
+					} catch {
+						return { error: "Invalid regular expression." };
+					}
+				}
+				const needle = query.toLowerCase();
+				const results = [];
+				for (const file of deps.getOpenFiles()) {
+					if (file.type !== "editor") continue;
+					let text = "";
+					try {
+						text = String(file.session?.doc ?? "");
+					} catch {
+						continue;
+					}
+					const lines = text.split("\n");
+					for (let i = 0; i < lines.length; i++) {
+						const hit = matcher
+							? matcher.test(lines[i])
+							: lines[i].toLowerCase().includes(needle);
+						if (hit) {
+							results.push({
+								file: file.filename ?? file.name,
+								line: i + 1,
+								text: lines[i].slice(0, 200),
+							});
+							if (results.length >= 40)
+								return { results, truncated: true };
+						}
+						if (matcher) matcher.lastIndex = 0;
+					}
+				}
+				return { results, truncated: false };
+			},
+		},
 		list_commands: {
 			description:
 				"List Acodex app commands that can be run with run_command (themes, panes, search, terminal, save, format, etc.).",

@@ -11,7 +11,7 @@ export const MAX_AGENT_STEPS = 8;
 
 /**
  * @typedef {import("./client").ChatMessage} ChatMessage
- * @typedef {{type: "tool", name: string, result: object} | {type: "assistant", content: string}} AgentEvent
+ * @typedef {{type: "tool", name: string, result: object} | {type: "assistant", content: string} | {type: "assistant-delta", text: string}} AgentEvent
  */
 
 /**
@@ -23,6 +23,7 @@ export const MAX_AGENT_STEPS = 8;
  * @param {ReturnType<typeof import("./tools").createToolRegistry>} params.registry
  * @param {(event: AgentEvent) => void} [params.onEvent]
  * @param {AbortSignal} [params.signal]
+ * @param {string} [params.systemContext] Extra context appended to the system prompt (e.g. active file info)
  * @param {typeof createChatCompletion} [params.complete]
  * @returns {Promise<ChatMessage[]>}
  */
@@ -32,16 +33,22 @@ export async function runAgent({
 	registry,
 	onEvent = () => {},
 	signal,
+	systemContext = "",
 	complete = createChatCompletion,
 }) {
+	const systemPrompt = systemContext
+		? `${SYSTEM_PROMPT}\n\nContexto atual do editor:\n${systemContext}`
+		: SYSTEM_PROMPT;
+
 	for (let step = 0; step < MAX_AGENT_STEPS; step++) {
 		if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
 
 		const message = await complete({
 			config,
-			messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history],
+			messages: [{ role: "system", content: systemPrompt }, ...history],
 			tools: registry.definitions,
 			signal,
+			onDelta: (text) => onEvent({ type: "assistant-delta", text }),
 		});
 		history.push(message);
 
