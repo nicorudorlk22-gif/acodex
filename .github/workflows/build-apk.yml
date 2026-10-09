@@ -52,8 +52,7 @@ jobs:
           NVAPI_BUILTIN: ${{ secrets.NVAPI_BUILTIN }}
         run: |
           if [ -n "$NVAPI_BUILTIN" ]; then
-            printf 'export const BUILTIN_API_KEYS = { nvidia: "%s" };
-' "$NVAPI_BUILTIN" > src/lib/acodexAi/builtinCredentials.js
+            printf 'export const BUILTIN_API_KEYS = { nvidia: "%s" };\n' "$NVAPI_BUILTIN" > src/lib/acodexAi/builtinCredentials.js
             echo "builtin keys injetadas"
           else
             echo "sem secret, usando placeholder vazio"
