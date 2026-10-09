@@ -284,9 +284,8 @@ function handleSlashCommand(text) {
 		return true;
 	}
 	if (cmd === "/arquivo") {
-		const editor = editorManager.activeFile?.type === "editor"
-			? editorManager.editor
-			: null;
+		const editor =
+			editorManager.activeFile?.type === "editor" ? editorManager.editor : null;
 		if (!editor) {
 			appendMessage("error", "Nenhum arquivo aberto.");
 			return true;
@@ -294,14 +293,13 @@ function handleSlashCommand(text) {
 		const name = editorManager.activeFile.filename ?? "arquivo";
 		const content = editor.state.doc.toString();
 		send(
-			`[${name}]\n\`${'`'}\`${'`'}\`${'`'}\n${content}\n\`${'`'}\`${'`'}\`${'`'}\n\n${arg || "Analise este arquivo e dê um resumo técnico com sugestões de melhoria."}`,
+			`[${name}]\n\`${"`"}\`${"`"}\`${"`"}\n${content}\n\`${"`"}\`${"`"}\`${"`"}\n\n${arg || "Analise este arquivo e dê um resumo técnico com sugestões de melhoria."}`,
 		);
 		return true;
 	}
 	if (cmd === "/selecao") {
-		const editor = editorManager.activeFile?.type === "editor"
-			? editorManager.editor
-			: null;
+		const editor =
+			editorManager.activeFile?.type === "editor" ? editorManager.editor : null;
 		if (!editor) {
 			appendMessage("error", "Nenhum arquivo aberto.");
 			return true;
@@ -314,12 +312,16 @@ function handleSlashCommand(text) {
 		}
 		const name = editorManager.activeFile.filename ?? "arquivo";
 		send(
-			`[seleção em ${name}]\n\`${'`'}\`${'`'}\`${'`'}\n${selection}\n\`${'`'}\`${'`'}\`${'`'}\n\n${arg || "Revise esta seleção e sugira melhorias."}`,
+			`[seleção em ${name}]\n\`${"`"}\`${"`"}\`${"`"}\n${selection}\n\`${"`"}\`${"`"}\`${"`"}\n\n${arg || "Revise esta seleção e sugira melhorias."}`,
 		);
 		return true;
 	}
 	if (cmd === "/busca") {
-		send(arg ? `Busque "${arg}" nos arquivos abertos usando a ferramenta de busca.` : "Liste TODOs nos arquivos abertos usando a ferramenta de busca.");
+		send(
+			arg
+				? `Busque "${arg}" nos arquivos abertos usando a ferramenta de busca.`
+				: "Liste TODOs nos arquivos abertos usando a ferramenta de busca.",
+		);
 		return true;
 	}
 	return false;

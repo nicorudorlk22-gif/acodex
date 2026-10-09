@@ -28,12 +28,36 @@ export const AI_PROVIDERS = [
 		match: "integrate.api.nvidia.com",
 		accent: "#76b900",
 		models: [
-			{ id: "nvidia/nemotron-3.5-lightning-30b-a3b", label: "Nemotron 3.5 Lightning 30B A3B", badges: ["raciocínio", "rápido", "0.4s"] },
-			{ id: "google/diffusiongemma-26b-a4b-it", label: "DiffusionGemma 26B A4B", badges: ["visão", "raciocínio", "0.4s"] },
-			{ id: "nvidia/nemotron-3-ultra-550b-a55b", label: "Nemotron 3 Ultra 550B A55B", badges: ["raciocínio", "premium"] },
-			{ id: "nvidia/ising-calibration-1.5-31b", label: "Ising Calibration 1.5 31B", badges: ["visão", "tools"] },
-			{ id: "moonshotai/kimi-k3", label: "Kimi K3 (Moonshot)", badges: ["visão", "raciocínio"] },
-			{ id: "z-ai/glm-5.3-flash", label: "GLM 5.3 Flash (Z.AI)", badges: ["instável"] },
+			{
+				id: "nvidia/nemotron-3.5-lightning-30b-a3b",
+				label: "Nemotron 3.5 Lightning 30B A3B",
+				badges: ["raciocínio", "rápido", "0.4s"],
+			},
+			{
+				id: "google/diffusiongemma-26b-a4b-it",
+				label: "DiffusionGemma 26B A4B",
+				badges: ["visão", "raciocínio", "0.4s"],
+			},
+			{
+				id: "nvidia/nemotron-3-ultra-550b-a55b",
+				label: "Nemotron 3 Ultra 550B A55B",
+				badges: ["raciocínio", "premium"],
+			},
+			{
+				id: "nvidia/ising-calibration-1.5-31b",
+				label: "Ising Calibration 1.5 31B",
+				badges: ["visão", "tools"],
+			},
+			{
+				id: "moonshotai/kimi-k3",
+				label: "Kimi K3 (Moonshot)",
+				badges: ["visão", "raciocínio"],
+			},
+			{
+				id: "z-ai/glm-5.3-flash",
+				label: "GLM 5.3 Flash (Z.AI)",
+				badges: ["instável"],
+			},
 		],
 	},
 	{
@@ -43,10 +67,22 @@ export const AI_PROVIDERS = [
 		match: "openrouter.ai",
 		accent: "#8b5cf6",
 		models: [
-			{ id: "anthropic/claude-sonnet-4", label: "Claude Sonnet 4", badges: ["tools", "code"] },
+			{
+				id: "anthropic/claude-sonnet-4",
+				label: "Claude Sonnet 4",
+				badges: ["tools", "code"],
+			},
 			{ id: "openai/gpt-5-mini", label: "GPT-5 mini", badges: ["tools"] },
-			{ id: "google/gemini-2.5-flash", label: "Gemini 2.5 Flash", badges: ["visão", "rápido"] },
-			{ id: "deepseek/deepseek-r1", label: "DeepSeek R1", badges: ["raciocínio"] },
+			{
+				id: "google/gemini-2.5-flash",
+				label: "Gemini 2.5 Flash",
+				badges: ["visão", "rápido"],
+			},
+			{
+				id: "deepseek/deepseek-r1",
+				label: "DeepSeek R1",
+				badges: ["raciocínio"],
+			},
 		],
 	},
 	{
@@ -56,7 +92,11 @@ export const AI_PROVIDERS = [
 		match: "api.groq.com",
 		accent: "#f55036",
 		models: [
-			{ id: "llama-3.3-70b-versatile", label: "Llama 3.3 70B Versatile", badges: ["rápido"] },
+			{
+				id: "llama-3.3-70b-versatile",
+				label: "Llama 3.3 70B Versatile",
+				badges: ["rápido"],
+			},
 			{ id: "qwen/qwen3-32b", label: "Qwen 3 32B", badges: ["tools"] },
 		],
 	},
@@ -68,7 +108,11 @@ export const AI_PROVIDERS = [
 		accent: "#ffffff",
 		models: [
 			{ id: "openai/gpt-5-mini", label: "GPT-5 mini", badges: ["tools"] },
-			{ id: "anthropic/claude-sonnet-4", label: "Claude Sonnet 4", badges: ["tools", "code"] },
+			{
+				id: "anthropic/claude-sonnet-4",
+				label: "Claude Sonnet 4",
+				badges: ["tools", "code"],
+			},
 		],
 	},
 	{
@@ -97,8 +141,9 @@ export function getProviderForBaseUrl(baseUrl) {
 		return null;
 	}
 	return (
-		AI_PROVIDERS.find((p) => hostname === p.match || hostname.endsWith(`.${p.match}`)) ||
-		null
+		AI_PROVIDERS.find(
+			(p) => hostname === p.match || hostname.endsWith(`.${p.match}`),
+		) || null
 	);
 }
 
@@ -123,14 +168,20 @@ export function listCatalogModels() {
  * @param {typeof fetch} [params.fetchImpl]
  * @returns {Promise<string[]>} sorted model ids
  */
-export async function fetchAvailableModels({ baseUrl, apiKey, fetchImpl = globalThis.fetch }) {
+export async function fetchAvailableModels({
+	baseUrl,
+	apiKey,
+	fetchImpl = globalThis.fetch,
+}) {
 	const url = `${baseUrl.replace(/\/+$/, "")}/models`;
 	const headers = { Accept: "application/json" };
 	if (apiKey?.trim()) headers.Authorization = `Bearer ${apiKey.trim()}`;
 
 	const response = await fetchImpl(url, { headers });
 	if (!response.ok) {
-		throw new Error(`HTTP ${response.status} ${response.statusText || ""}`.trim());
+		throw new Error(
+			`HTTP ${response.status} ${response.statusText || ""}`.trim(),
+		);
 	}
 	const data = await response.json();
 	const ids = (Array.isArray(data) ? data : data?.data || [])

@@ -11,23 +11,87 @@
 
 const KEYWORDS = new Set([
 	// JS / TS
-	"const", "let", "var", "function", "return", "if", "else", "for", "while",
-	"do", "switch", "case", "break", "continue", "import", "export", "from",
-	"as", "default", "class", "extends", "new", "this", "super", "typeof",
-	"instanceof", "in", "of", "try", "catch", "finally", "throw", "async",
-	"await", "yield", "static", "get", "set", "interface", "type", "enum",
-	"implements", "private", "public", "protected", "readonly", "declare",
-	"abstract", "satisfies", "keyof", "void", "delete",
+	"const",
+	"let",
+	"var",
+	"function",
+	"return",
+	"if",
+	"else",
+	"for",
+	"while",
+	"do",
+	"switch",
+	"case",
+	"break",
+	"continue",
+	"import",
+	"export",
+	"from",
+	"as",
+	"default",
+	"class",
+	"extends",
+	"new",
+	"this",
+	"super",
+	"typeof",
+	"instanceof",
+	"in",
+	"of",
+	"try",
+	"catch",
+	"finally",
+	"throw",
+	"async",
+	"await",
+	"yield",
+	"static",
+	"get",
+	"set",
+	"interface",
+	"type",
+	"enum",
+	"implements",
+	"private",
+	"public",
+	"protected",
+	"readonly",
+	"declare",
+	"abstract",
+	"satisfies",
+	"keyof",
+	"void",
+	"delete",
 	// Python
-	"def", "elif", "lambda", "with", "pass", "raise", "assert", "global",
-	"nonlocal", "except", "print",
+	"def",
+	"elif",
+	"lambda",
+	"with",
+	"pass",
+	"raise",
+	"assert",
+	"global",
+	"nonlocal",
+	"except",
+	"print",
 	// Shell / misc
-	"echo", "then", "fi",
+	"echo",
+	"then",
+	"fi",
 ]);
 
 const LITERALS = new Set([
-	"true", "false", "null", "undefined", "NaN", "Infinity",
-	"None", "True", "False", "self",
+	"true",
+	"false",
+	"null",
+	"undefined",
+	"NaN",
+	"Infinity",
+	"None",
+	"True",
+	"False",
+	"self",
 ]);
 
 /**
@@ -38,7 +102,8 @@ const LITERALS = new Set([
  */
 export function highlightCode(code, lang = "") {
 	const $frag = document.createDocumentFragment();
-	const hash = lang.includes("#") || lang.includes("bash") || lang.includes("sh");
+	const hash =
+		lang.includes("#") || lang.includes("bash") || lang.includes("sh");
 	const master =
 		/(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*|"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'|`(?:\\.|[^`\\])*`|\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b|\b[A-Za-z_$][\w$]*\b)/gi;
 	let last = 0;
@@ -176,7 +241,9 @@ export function renderAssistantMessage(markdown) {
 			$copy.className = "ai-copy";
 			$copy.textContent = "Copiar";
 			$copy.onclick = async () => {
-				$copy.textContent = (await copyText(part.text)) ? "Copiado ✓" : "Falhou";
+				$copy.textContent = (await copyText(part.text))
+					? "Copiado ✓"
+					: "Falhou";
 				setTimeout(() => ($copy.textContent = "Copiar"), 1600);
 			};
 			$bar.append($copy);

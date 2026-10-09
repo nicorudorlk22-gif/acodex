@@ -176,7 +176,10 @@ export function createToolRegistry(deps) {
 				type: "object",
 				properties: {
 					query: { type: "string", description: "Text or regex to find." },
-					regex: { type: "boolean", description: "Treat the query as a regular expression." },
+					regex: {
+						type: "boolean",
+						description: "Treat the query as a regular expression.",
+					},
 				},
 				required: ["query"],
 			},
@@ -211,8 +214,7 @@ export function createToolRegistry(deps) {
 								line: i + 1,
 								text: lines[i].slice(0, 200),
 							});
-							if (results.length >= 40)
-								return { results, truncated: true };
+							if (results.length >= 40) return { results, truncated: true };
 						}
 						if (matcher) matcher.lastIndex = 0;
 					}
