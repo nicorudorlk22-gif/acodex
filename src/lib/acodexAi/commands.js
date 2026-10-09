@@ -8,7 +8,7 @@ import toast from "components/toast";
 import alert from "dialogs/alert";
 import loader from "dialogs/loader";
 import select from "dialogs/select";
-import { createChatCompletion } from "lib/acodexAi/client";
+import { createChatCompletion, withBuiltinKey } from "lib/acodexAi/client";
 import appSettings from "lib/settings";
 
 /**
@@ -79,11 +79,16 @@ export async function runAiCommand(commandId, code, filename) {
 	const command = AI_COMMANDS[commandId];
 	if (!command) throw new Error(`Unknown AI command: ${commandId}`);
 	const { aiBaseUrl, aiApiKey, aiModel } = appSettings.value;
-	if (!aiApiKey?.trim()) {
+	const config = withBuiltinKey({
+		baseUrl: aiBaseUrl,
+		apiKey: aiApiKey,
+		model: aiModel,
+	});
+	if (!config.apiKey?.trim()) {
 		throw new Error("Configure your AI key in the AI sidebar settings first");
 	}
 	const message = await createChatCompletion({
-		config: { baseUrl: aiBaseUrl, apiKey: aiApiKey, model: aiModel },
+		config,
 		messages: [{ role: "user", content: command.template(code, filename) }],
 	});
 	return String(message.content || "").trim();

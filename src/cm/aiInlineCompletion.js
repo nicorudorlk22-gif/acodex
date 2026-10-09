@@ -6,7 +6,7 @@
  */
 import { Prec, StateEffect, StateField } from "@codemirror/state";
 import { Decoration, EditorView, keymap, WidgetType } from "@codemirror/view";
-import { createChatCompletion } from "lib/acodexAi/client";
+import { createChatCompletion, withBuiltinKey } from "lib/acodexAi/client";
 import appSettings from "lib/settings";
 
 const TRIGGER_IDLE_MS = 900;
@@ -123,10 +123,15 @@ export function shouldTrigger({ pos, lineText }) {
  */
 export async function requestCompletion(before, filename) {
 	const { aiBaseUrl, aiApiKey, aiModel } = appSettings.value;
-	if (!aiApiKey?.trim()) return "";
+	const config = withBuiltinKey({
+		baseUrl: aiBaseUrl,
+		apiKey: aiApiKey,
+		model: aiModel,
+	});
+	if (!config.apiKey?.trim()) return "";
 	try {
 		const message = await createChatCompletion({
-			config: { baseUrl: aiBaseUrl, apiKey: aiApiKey, model: aiModel },
+			config,
 			messages: [
 				{ role: "user", content: buildCompletionPrompt(before, filename) },
 			],

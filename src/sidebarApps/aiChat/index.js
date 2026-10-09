@@ -3,7 +3,7 @@ import "./modelSwitcher.scss";
 import confirm from "dialogs/confirm";
 import multiPrompt from "dialogs/multiPrompt";
 import { runAgent } from "lib/acodexAi/agent";
-import { validateAiConfig } from "lib/acodexAi/client";
+import { validateAiConfig, withBuiltinKey } from "lib/acodexAi/client";
 import { createToolRegistry } from "lib/acodexAi/tools";
 import commands from "lib/commands";
 import EditorFile from "lib/editorFile";
@@ -87,7 +87,11 @@ const registry = createToolRegistry({
 
 function getConfig() {
 	const { aiBaseUrl, aiApiKey, aiModel } = appSettings.value;
-	return { baseUrl: aiBaseUrl, apiKey: aiApiKey, model: aiModel };
+	return withBuiltinKey({
+		baseUrl: aiBaseUrl,
+		apiKey: aiApiKey,
+		model: aiModel,
+	});
 }
 
 /**

@@ -25,6 +25,31 @@ export const DEFAULT_AI_CONFIG = Object.freeze({
 	model: "openai/gpt-5-mini",
 });
 
+import { BUILTIN_API_KEYS } from "./builtinCredentials";
+
+/**
+ * Retorna a chave embutida no build para a URL base, se houver.
+ * @param {string} baseUrl
+ * @returns {string} chave ou ""
+ */
+export function getBuiltinKeyForBaseUrl(baseUrl) {
+	const url = String(baseUrl || "");
+	if (url.includes("integrate.api.nvidia.com"))
+		return BUILTIN_API_KEYS.nvidia || "";
+	return "";
+}
+
+/**
+ * Completa a config com a chave embutida quando o usuário não definiu a sua.
+ * @param {AiConfig} config
+ * @returns {AiConfig}
+ */
+export function withBuiltinKey(config) {
+	if (config?.apiKey?.trim()) return config;
+	const key = getBuiltinKeyForBaseUrl(config?.baseUrl);
+	return key ? { ...config, apiKey: key } : config;
+}
+
 export class AiRequestError extends Error {
 	/**
 	 * @param {string} message
