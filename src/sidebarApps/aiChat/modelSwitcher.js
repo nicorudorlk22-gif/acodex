@@ -39,7 +39,9 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 		>
 			<span className="icon tune" />
 			<span className="ai-model-toggle-provider" />
-			<span className="ai-model-toggle-name">{getConfig().model || "sem modelo"}</span>
+			<span className="ai-model-toggle-name">
+				{getConfig().model || "sem modelo"}
+			</span>
 			<span className="icon expand_more" />
 		</button>
 	);
@@ -50,7 +52,13 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 
 	function buildOverlay() {
 		if ($overlay) return;
-		$overlay = <div className="ai-model-palette" role="dialog" aria-label="Selecionar modelo"></div>;
+		$overlay = (
+			<div
+				className="ai-model-palette"
+				role="dialog"
+				aria-label="Selecionar modelo"
+			></div>
+		);
 		$search = (
 			<input
 				className="ai-model-search"
@@ -77,7 +85,9 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 						<span className="icon refresh" />
 					</button>
 				</div>
-				<div className="ai-model-hint">↑ ↓ navegar · Enter selecionar · Esc fecha</div>
+				<div className="ai-model-hint">
+					↑ ↓ navegar · Enter selecionar · Esc fecha
+				</div>
 				{$list}
 			</div>,
 		);
@@ -132,7 +142,8 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 		}
 
 		// Live models discovered on the current endpoint.
-		const live = $overlay?.dataset.liveModels?.split("\n").filter(Boolean) || [];
+		const live =
+			$overlay?.dataset.liveModels?.split("\n").filter(Boolean) || [];
 		if (live.length) {
 			const groupName = `${provider?.label || providerName(config.baseUrl)} · do servidor`;
 			byProvider.set(groupName, {
@@ -165,7 +176,9 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 	function matches(item, query) {
 		const q = query.trim().toLowerCase();
 		if (!q) return true;
-		return `${item.id} ${item.label} ${item.badges?.join(" ") || ""}`.toLowerCase().includes(q);
+		return `${item.id} ${item.label} ${item.badges?.join(" ") || ""}`
+			.toLowerCase()
+			.includes(q);
 	}
 
 	function render() {
@@ -181,7 +194,10 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 			const $group = <div className="ai-model-group"></div>;
 			$group.append(
 				<div className="ai-model-group-label">
-					<span className="ai-model-group-dot" style={`background: ${group.accent}`} />
+					<span
+						className="ai-model-group-dot"
+						style={`background: ${group.accent}`}
+					/>
 					{group.group}
 				</div>,
 			);
@@ -198,7 +214,9 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 					>
 						<span className="ai-model-item-name">{item.label}</span>
 						<span className="ai-model-item-badges">
-							{item.badges?.map((b) => <span className="ai-model-badge">{b}</span>)}
+							{item.badges?.map((b) => (
+								<span className="ai-model-badge">{b}</span>
+							))}
 						</span>
 						<span className={`icon ${selected ? "check_circle" : "circle"}`} />
 					</button>
@@ -212,7 +230,9 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 
 		if (!flatItems.length) {
 			$list.append(
-				<div className="ai-model-empty">Nenhum modelo encontrado para “{$search.value}”</div>,
+				<div className="ai-model-empty">
+					Nenhum modelo encontrado para “{$search.value}”
+				</div>,
 			);
 		}
 
@@ -248,7 +268,8 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 			if (flatItems.length) setActive((activeIndex + 1) % flatItems.length);
 		} else if (e.key === "ArrowUp") {
 			e.preventDefault();
-			if (flatItems.length) setActive((activeIndex - 1 + flatItems.length) % flatItems.length);
+			if (flatItems.length)
+				setActive((activeIndex - 1 + flatItems.length) % flatItems.length);
 		} else if (e.key === "Enter") {
 			e.preventDefault();
 			const entry = flatItems[activeIndex];
@@ -265,7 +286,8 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 	function updateToggleLabel() {
 		const model = currentModel();
 		const provider = getProviderForBaseUrl(getConfig().baseUrl);
-		$toggle.querySelector(".ai-model-toggle-name").textContent = model || "sem modelo";
+		$toggle.querySelector(".ai-model-toggle-name").textContent =
+			model || "sem modelo";
 		$toggle.querySelector(".ai-model-toggle-provider").textContent = provider
 			? provider.label
 			: "";
