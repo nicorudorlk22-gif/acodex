@@ -28,11 +28,12 @@ export const AI_PROVIDERS = [
 		match: "integrate.api.nvidia.com",
 		accent: "#76b900",
 		models: [
-			{ id: "moonshotai/kimi-k3", label: "Kimi K3 (Moonshot)", badges: ["visão", "raciocínio"] },
-			{ id: "z-ai/glm-5.3-flash", label: "GLM 5.3 Flash (Z.AI)", badges: ["raciocínio", "rápido"] },
+			{ id: "nvidia/nemotron-3.5-lightning-30b-a3b", label: "Nemotron 3.5 Lightning 30B A3B", badges: ["raciocínio", "rápido", "0.4s"] },
+			{ id: "google/diffusiongemma-26b-a4b-it", label: "DiffusionGemma 26B A4B", badges: ["visão", "raciocínio", "0.4s"] },
 			{ id: "nvidia/nemotron-3-ultra-550b-a55b", label: "Nemotron 3 Ultra 550B A55B", badges: ["raciocínio", "premium"] },
-			{ id: "nvidia/nemotron-3.5-lightning-30b-a3b", label: "Nemotron 3.5 Lightning 30B A3B", badges: ["raciocínio", "rápido"] },
 			{ id: "nvidia/ising-calibration-1.5-31b", label: "Ising Calibration 1.5 31B", badges: ["visão", "tools"] },
+			{ id: "moonshotai/kimi-k3", label: "Kimi K3 (Moonshot)", badges: ["visão", "raciocínio"] },
+			{ id: "z-ai/glm-5.3-flash", label: "GLM 5.3 Flash (Z.AI)", badges: ["instável"] },
 		],
 	},
 	{
