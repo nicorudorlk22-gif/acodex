@@ -177,3 +177,42 @@
     }
   }
 }
+
+  /* refinamentos */
+
+  .ai-msg {
+    animation: ai-msg-in 0.18s ease;
+  }
+
+  .ai-msg.tool.ai-thinking::after {
+    content: "";
+    margin-left: 4px;
+    animation: ai-dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes ai-dots {
+    0% {
+      content: "";
+    }
+    25% {
+      content: "·";
+    }
+    50% {
+      content: "· ·";
+    }
+    75%,
+    100% {
+      content: "· · ·";
+    }
+  }
+
+  @keyframes ai-msg-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  .ai-input {
+    overflow-y: auto;
+  }

@@ -38,6 +38,7 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 			onclick={() => open()}
 		>
 			<span className="icon tune" />
+			<span className="ai-model-toggle-provider" />
 			<span className="ai-model-toggle-name">{getConfig().model || "sem modelo"}</span>
 			<span className="icon expand_more" />
 		</button>
@@ -263,8 +264,11 @@ export function createModelSwitcher({ getConfig, onSelect }) {
 
 	function updateToggleLabel() {
 		const model = currentModel();
-		$toggle.querySelector(".ai-model-toggle-name").textContent = model || "sem modelo";
 		const provider = getProviderForBaseUrl(getConfig().baseUrl);
+		$toggle.querySelector(".ai-model-toggle-name").textContent = model || "sem modelo";
+		$toggle.querySelector(".ai-model-toggle-provider").textContent = provider
+			? provider.label
+			: "";
 		$toggle.classList.toggle("known-provider", Boolean(provider));
 	}
 

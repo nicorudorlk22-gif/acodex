@@ -83,6 +83,7 @@ function initApp(el) {
 			placeholder="Pergunte ou peça uma tarefa..."
 			aria-label="Mensagem para o Acodex AI"
 			onkeydown={onKeyDown}
+			oninput={autoResize}
 		/>
 	);
 	$sendBtn = (
@@ -174,10 +175,20 @@ function renderEmptyState() {
  * @param {KeyboardEvent} e
  */
 function onKeyDown(e) {
+	if (e.key === "Escape" && controller) {
+		e.preventDefault();
+		controller.abort();
+		return;
+	}
 	if (e.key !== "Enter" || e.shiftKey) return;
 	if (e.isComposing || e.keyCode === 229) return;
 	e.preventDefault();
 	onSendClick();
+}
+
+function autoResize() {
+	$input.style.height = "auto";
+	$input.style.height = `${Math.min($input.scrollHeight, 140)}px`;
 }
 
 function onSendClick() {
@@ -247,9 +258,11 @@ async function send(rawText) {
 	}
 
 	$input.value = "";
+	autoResize();
 	appendMessage("user", text);
 	history.push({ role: "user", content: text });
-	const $thinking = appendMessage("tool", "Pensando...");
+	const $thinking = appendMessage("tool", "Pensando");
+	$thinking.classList.add("ai-thinking");
 
 	controller = new AbortController();
 	setBusy(true);
