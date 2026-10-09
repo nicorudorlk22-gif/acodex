@@ -28,6 +28,7 @@ export const AI_PROVIDERS = [
 		match: "integrate.api.nvidia.com",
 		accent: "#76b900",
 		models: [
+			{ id: "nvidia/nemotron-3.5-lightning-30b-a3b", label: "Nemotron 3.5 Lightning 30B A3B", badges: ["raciocínio", "rápido"] },
 			{ id: "nvidia/ising-calibration-1.5-31b", label: "Ising Calibration 1.5 31B", badges: ["visão", "tools"] },
 			{ id: "meta/llama-3.3-70b-instruct", label: "Llama 3.3 70B", badges: ["tools"] },
 			{ id: "meta/llama-3.1-8b-instruct", label: "Llama 3.1 8B", badges: ["rápido"] },
