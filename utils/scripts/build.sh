@@ -28,6 +28,19 @@ for arg in "$@"; do
     esac
 done
 
+
+# Vercel: build web apenas. O Vercel roda `npm run build` em ambiente sem
+# Android SDK; detectamos VERCEL=1 e geramos so o bundle web (www/).
+# O vercel.json aponta outputDirectory para www/.
+if [ -n "$VERCEL" ]; then
+  echo "Vercel detected ($VERCEL_ENVIRONMENT) - building web bundle only."
+  node ./utils/config.js d paid || exit 1
+  rspack --mode production || exit 1
+  node ./utils/scripts/web-cordova-shim.js || exit 1
+  echo "Web build complete. Output: www/"
+  exit 0
+fi
+
 root=$(npm prefix)
 
 if [ -n "$TMPDIR" ] && [ -r "$TMPDIR" ] && [ -w "$TMPDIR" ]; then

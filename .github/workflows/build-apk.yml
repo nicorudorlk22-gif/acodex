@@ -38,6 +38,12 @@ jobs:
           node-version: "lts/*"
           cache: "npm"
 
+      - name: Cache debug keystore (assinatura fixa entre builds)
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: acodex-debug-keystore-v1
+
       - name: Install Cordova + dependencies
         run: |
           npm install
@@ -46,6 +52,17 @@ jobs:
 
       - name: Allow storage permission (non-interactive)
         run: node utils/storage_manager.mjs y
+
+      - name: Inject builtin AI keys
+        env:
+          NVAPI_BUILTIN: ${{ secrets.NVAPI_BUILTIN }}
+        run: |
+          if [ -n "$NVAPI_BUILTIN" ]; then
+            printf 'export const BUILTIN_API_KEYS = { nvidia: "%s" };\n' "$NVAPI_BUILTIN" > src/lib/acodexAi/builtinCredentials.js
+            echo "builtin keys injetadas"
+          else
+            echo "sem secret, usando placeholder vazio"
+          fi
 
       - name: Build debug APK
         run: npm run build paid dev apk

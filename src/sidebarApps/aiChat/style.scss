@@ -176,4 +176,182 @@
       background: var(--error-text-color, #d93025);
     }
   }
+
+  .ai-mic {
+    background: transparent;
+    border: 1px solid var(--border-color, rgba(122, 122, 122, 0.3));
+    color: var(--primary-text-color, inherit);
+
+    &.listening {
+      background: var(--error-text-color, #d93025);
+      border-color: transparent;
+      color: var(--button-text-color, #fff);
+      animation: ai-mic-pulse 1.4s ease-in-out infinite;
+    }
+  }
+
+  .ai-voice-hint {
+    max-height: 0;
+    overflow: hidden;
+    font-size: 0.75em;
+    color: var(--secondary-text-color, #999);
+    padding: 0 10px;
+    opacity: 0;
+    transition: max-height 0.2s ease, opacity 0.2s ease;
+
+    &.visible {
+      max-height: 60px;
+      opacity: 1;
+      padding-bottom: 8px;
+    }
+
+    &.error {
+      color: var(--error-text-color, #d93025);
+    }
+  }
 }
+
+@keyframes ai-mic-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+  /* refinamentos */
+
+  .ai-msg {
+    animation: ai-msg-in 0.18s ease;
+  }
+
+  .ai-msg.tool.ai-thinking::after {
+    content: "";
+    margin-left: 4px;
+    animation: ai-dots 1.2s steps(4, end) infinite;
+  }
+
+  @keyframes ai-dots {
+    0% {
+      content: "";
+    }
+    25% {
+      content: "·";
+    }
+    50% {
+      content: "· ·";
+    }
+    75%,
+    100% {
+      content: "· · ·";
+    }
+  }
+
+  @keyframes ai-msg-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  .ai-input {
+    overflow-y: auto;
+  }
+
+  /* realce de sintaxe */
+  .ai-code code {
+    display: block;
+    overflow-x: auto;
+    padding: 8px 10px;
+  }
+
+  .ai-code-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 2px 8px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .ai-code-lang {
+    margin-right: auto;
+    opacity: 0.6;
+    font-size: 0.75em;
+    text-transform: lowercase;
+  }
+
+  .tok-comment {
+    opacity: 0.55;
+    font-style: italic;
+  }
+
+  .tok-string {
+    color: #a5d6a7;
+  }
+
+  .tok-number {
+    color: #fdd835;
+  }
+
+  .tok-keyword {
+    color: #64b5f6;
+  }
+
+  .tok-bool {
+    color: #ce93d8;
+  }
+
+  .tok-fn {
+    color: #4dd0e1;
+  }
+
+  .ai-inline-code {
+    padding: 1px 4px;
+    border-radius: 4px;
+    background: rgba(128, 128, 128, 0.15);
+  }
+
+  /* cursor de streaming */
+  .ai-msg.assistant.ai-live .ai-msg-body::after {
+    content: "▍";
+    opacity: 0.7;
+    animation: ai-caret 0.9s steps(2) infinite;
+  }
+
+  @keyframes ai-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* barra de comandos slash */
+  .ai-hints {
+    display: none;
+    max-height: 180px;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .ai-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    color: var(--primary-text-color, inherit);
+    text-align: start;
+
+    code {
+      min-width: 72px;
+    }
+
+    span {
+      opacity: 0.65;
+      font-size: 0.85em;
+    }
+  }

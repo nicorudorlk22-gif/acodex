@@ -39,6 +39,17 @@
       z-index: 999999;
 
       background-color: var(--bg-color);
+      background-image:
+        radial-gradient(
+          ellipse 90% 55% at 50% 36%,
+          rgba(255, 255, 255, 0.07),
+          transparent 70%
+        ),
+        radial-gradient(
+          ellipse 120% 80% at 50% 110%,
+          rgba(0, 0, 0, 0.35),
+          transparent 60%
+        );
 
       text-align: center;
 
@@ -53,7 +64,7 @@
       left: 50%;
       width: 180px;
       height: 180px;
-      margin-top: -90px;
+      margin-top: -100px;
       margin-left: -90px;
 
       background-image: url("./splash-logo.png");
@@ -61,21 +72,68 @@
       background-repeat: no-repeat;
       background-size: 140px;
 
-      animation: splashPulse 1.8s ease-in-out infinite;
+      filter: drop-shadow(0 10px 32px rgba(0, 0, 0, 0.55));
+
+      animation: splashEnter 0.55s ease-out both,
+        splashPulse 2.6s ease-in-out 0.55s infinite;
+    }
+
+    @keyframes splashEnter {
+      from {
+        opacity: 0;
+        transform: scale(0.78);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
 
     @keyframes splashPulse {
       0% {
-        transform: scale(0.92);
-        opacity: 0.75;
+        transform: scale(0.965);
+        opacity: 0.88;
       }
       50% {
         transform: scale(1);
         opacity: 1;
       }
       100% {
-        transform: scale(0.92);
-        opacity: 0.75;
+        transform: scale(0.965);
+        opacity: 0.88;
+      }
+    }
+
+    .splash-bar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 150px;
+      height: 3px;
+      margin-top: 76px;
+      margin-left: -75px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .splash-bar-fill {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: -40%;
+      width: 40%;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.85);
+      animation: splashBar 1.5s ease-in-out infinite;
+    }
+
+    @keyframes splashBar {
+      0% {
+        left: -40%;
+      }
+      100% {
+        left: 100%;
       }
     }
 
@@ -84,22 +142,39 @@
       top: 15px;
       left: 15px;
 
-      color: rgb(209, 209, 209);
-      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 0.75rem;
       white-space: pre;
       font-family: monospace;
       text-align: left;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 3px 10px;
     }
 
     .splash-message {
       position: absolute;
-      bottom: 15px;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
-      color: rgb(209, 209, 209);
-      font-size: 1rem;
-      width: 90vw;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      width: 86vw;
       text-align: center;
+      animation: splashMsgFade 0.4s ease-out both;
+    }
+
+    @keyframes splashMsgFade {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 6px);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+      }
     }
   </style>
 
@@ -153,7 +228,7 @@
 
       if (!hasES6) {
         setStartupMessage(
-          "Acode requires a modern browser. Please update Android System WebView or Chrome."
+          "Acodex requires a modern browser. Please update Android System WebView or Chrome."
         );
       }
 
@@ -165,7 +240,7 @@
         window.__ACODE_WEBVIEW_MAJOR__ < MIN_WEBVIEW_MAJOR
       ) {
         setStartupMessage(
-          "Your Android System WebView is old. Update Android System WebView or Chrome if Acode stays on this screen."
+          "Your Android System WebView is old. Update Android System WebView or Chrome if Acodex stays on this screen."
         );
       }
 
@@ -222,6 +297,7 @@
 <body class="loading" data-version="" data-small-msg="">
   <div id="splash">
     <div id="splash-logo"></div>
+    <div class="splash-bar"><div class="splash-bar-fill"></div></div>
     <div class="splash-version"></div>
     <div class="splash-message"></div>
   </div>

@@ -11,7 +11,7 @@ export const MAX_AGENT_STEPS = 8;
 
 /**
  * @typedef {import("./client").ChatMessage} ChatMessage
- * @typedef {{type: "tool", name: string, result: object} | {type: "assistant", content: string}} AgentEvent
+ * @typedef {{type: "tool", name: string, result: object} | {type: "assistant", content: string} | {type: "assistant-delta", text: string}} AgentEvent
  */
 
 /**
@@ -23,6 +23,8 @@ export const MAX_AGENT_STEPS = 8;
  * @param {ReturnType<typeof import("./tools").createToolRegistry>} params.registry
  * @param {(event: AgentEvent) => void} [params.onEvent]
  * @param {AbortSignal} [params.signal]
+ * @param {string} [params.systemContext] Extra context appended to the system prompt (e.g. active file info)
+ * @param {string} [params.skillCatalog] Skill catalog prompt (see lib/acodexAi/skills.js) injected into the system prompt
  * @param {typeof createChatCompletion} [params.complete]
  * @returns {Promise<ChatMessage[]>}
  */
@@ -32,16 +34,24 @@ export async function runAgent({
 	registry,
 	onEvent = () => {},
 	signal,
+	systemContext = "",
+	skillCatalog = "",
 	complete = createChatCompletion,
 }) {
+	const parts = [SYSTEM_PROMPT];
+	if (skillCatalog) parts.push(skillCatalog);
+	if (systemContext) parts.push(`Contexto atual do editor:\n${systemContext}`);
+	const systemPrompt = parts.join("\n\n");
+
 	for (let step = 0; step < MAX_AGENT_STEPS; step++) {
 		if (signal?.aborted) throw new DOMException("Aborted", "AbortError");
 
 		const message = await complete({
 			config,
-			messages: [{ role: "system", content: SYSTEM_PROMPT }, ...history],
+			messages: [{ role: "system", content: systemPrompt }, ...history],
 			tools: registry.definitions,
 			signal,
+			onDelta: (text) => onEvent({ type: "assistant-delta", text }),
 		});
 		history.push(message);
 
