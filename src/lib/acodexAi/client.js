@@ -1,3 +1,5 @@
+import { nativeFetch } from "./nativeFetch";
+
 /**
  * @typedef {object} AiConfig
  * @property {string} baseUrl OpenAI-compatible base URL (e.g. https://ai-gateway.vercel.sh/v1)
@@ -106,7 +108,7 @@ export async function createChatCompletion({
 	tools,
 	signal,
 	onDelta,
-	fetchImpl = globalThis.fetch,
+	fetchImpl = nativeFetch,
 }) {
 	const configError = validateAiConfig(config);
 	if (configError) throw new AiRequestError(configError);

@@ -1,3 +1,4 @@
+import { nativeFetch } from "./nativeFetch";
 /**
  * Catálogo central de provedores e modelos do Acodex AI.
  *
@@ -171,7 +172,7 @@ export function listCatalogModels() {
 export async function fetchAvailableModels({
 	baseUrl,
 	apiKey,
-	fetchImpl = globalThis.fetch,
+	fetchImpl = nativeFetch,
 }) {
 	const url = `${baseUrl.replace(/\/+$/, "")}/models`;
 	const headers = { Accept: "application/json" };
