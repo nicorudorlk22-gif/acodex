@@ -3,7 +3,9 @@ import "./modelSwitcher.scss";
 import confirm from "dialogs/confirm";
 import multiPrompt from "dialogs/multiPrompt";
 import { runAgent } from "lib/acodexAi/agent";
+import { BUILTIN_SKILLS } from "lib/acodexAi/builtinSkills";
 import { validateAiConfig, withBuiltinKey } from "lib/acodexAi/client";
+import { createSkillRegistry } from "lib/acodexAi/skills";
 import { createToolRegistry } from "lib/acodexAi/tools";
 import commands from "lib/commands";
 import EditorFile from "lib/editorFile";
@@ -11,6 +13,7 @@ import openFile from "lib/openFile";
 import appSettings from "lib/settings";
 import { renderAssistantMessage } from "./format";
 import { createModelSwitcher } from "./modelSwitcher";
+import { createVoiceInput, isVoiceSupported } from "./voiceInput";
 
 const TOOL_LABELS = {
 	get_active_file: "Lendo arquivo ativo",
@@ -71,6 +74,34 @@ let $messages;
 let $input;
 /** @type {HTMLButtonElement} */
 let $sendBtn;
+/** @type {HTMLButtonElement} */
+let $micBtn;
+/** @type {HTMLElement} */
+let $voiceHint;
+/** @type {ReturnType<typeof createVoiceInput> | null} */
+let voiceInput = null;
+/** @type {string} */
+let voiceInterim = "";
+/**
+ * Registro de skills preenchido de forma assíncrona no init; o registry de
+ * tools lê este objeto em tempo de execução, então o preenchimento tardio
+ * é transparente.
+ */
+const skillHolder = {
+	skills: [],
+	has: () => false,
+	get: () => null,
+};
+/** @type {string} */
+let skillCatalog = "";
+
+async function initSkills() {
+	const registrySkills = await createSkillRegistry({ builtin: BUILTIN_SKILLS });
+	skillHolder.skills = registrySkills.skills;
+	skillHolder.has = registrySkills.has;
+	skillHolder.get = registrySkills.get;
+	skillCatalog = registrySkills.catalogPrompt;
+}
 
 const registry = createToolRegistry({
 	getActiveFile: () => editorManager.activeFile,
@@ -83,6 +114,7 @@ const registry = createToolRegistry({
 	execCommand: (command, arg) => commands[command](arg),
 	listCommands: () => Object.keys(commands),
 	confirm: (title, message) => confirm(title, message),
+	skills: skillHolder,
 });
 
 function getConfig() {
@@ -124,6 +156,24 @@ function initApp(el) {
 			<span className="icon arrow_upward" />
 		</button>
 	);
+	if (isVoiceSupported()) {
+		$voiceHint = <div className="ai-voice-hint" aria-hidden="true"></div>;
+		voiceInput = createVoiceInput({
+			onText: onVoiceText,
+			onStateChange: onVoiceStateChange,
+		});
+		$micBtn = (
+			<button
+				type="button"
+				className="ai-send ai-mic"
+				aria-label="Ditar mensagem"
+				title="Ditar mensagem"
+				onclick={onMicClick}
+			>
+				<span className="icon mic" />
+			</button>
+		);
+	}
 
 	const switcher = createModelSwitcher({
 		getConfig,
@@ -172,9 +222,12 @@ function initApp(el) {
 		<div className="ai-composer">
 			{$hints}
 			{$input}
+			{$micBtn ? $micBtn : null}
 			{$sendBtn}
 		</div>,
 	);
+	if ($voiceHint) el.append($voiceHint);
+	void initSkills();
 	renderEmptyState();
 }
 
@@ -343,6 +396,76 @@ function buildSystemContext() {
 	return parts.join("\n");
 }
 
+/**
+ * Insere texto no cursor do composer, mantendo o foco e o autocomplete.
+ * @param {string} text
+ */
+function insertAtCursor(text) {
+	const start = $input.selectionStart ?? $input.value.length;
+	const end = $input.selectionEnd ?? start;
+	const before = $input.value.slice(0, start);
+	const after = $input.value.slice(end);
+	const glue =
+		before && !/\s$/.test(before) && !/^[\s.,;:!?]/.test(text) ? " " : "";
+	$input.value = `${before}${glue}${text}${after}`;
+	const pos = start + glue.length + text.length;
+	$input.setSelectionRange(pos, pos);
+	autoResize();
+	updateHints();
+}
+
+/**
+ * @param {string} text
+ * @param {{ isFinal: boolean }} info
+ */
+function onVoiceText(text, info) {
+	if (info.isFinal) {
+		voiceInterim = "";
+		$voiceHint.textContent = "";
+		$voiceHint.classList.remove("visible");
+		insertAtCursor(text.trim());
+		return;
+	}
+	voiceInterim = text;
+	$voiceHint.textContent = text;
+	$voiceHint.classList.add("visible");
+}
+
+function onVoiceStateChange(state, message) {
+	if (!$micBtn) return;
+	$micBtn.classList.toggle("listening", state === "listening");
+	if (state === "listening") {
+		$micBtn.title = "Parar ditado";
+		$micBtn.setAttribute("aria-label", "Parar ditado");
+	} else {
+		$micBtn.title = "Ditar mensagem";
+		$micBtn.setAttribute("aria-label", "Ditar mensagem");
+		if (state === "error" || state === "unsupported") {
+			if (message) {
+				$voiceHint.textContent = message;
+				$voiceHint.classList.add("visible", "error");
+				setTimeout(() => {
+					$voiceHint.classList.remove("visible", "error");
+				}, 4000);
+			}
+		} else if (state === "idle") {
+			voiceInterim = "";
+			$voiceHint.textContent = "";
+			$voiceHint.classList.remove("visible");
+		}
+	}
+}
+
+function onMicClick() {
+	if (!voiceInput) return;
+	if (voiceInput.isListening()) {
+		voiceInput.stop();
+		return;
+	}
+	$input.focus();
+	voiceInput.start();
+}
+
 function onSendClick() {
 	if (controller) {
 		controller.abort();
@@ -424,6 +547,7 @@ async function send(rawText) {
 			registry,
 			signal: controller.signal,
 			systemContext: buildSystemContext(),
+			skillCatalog,
 			onEvent(event) {
 				if (event.type === "tool") {
 					const label = TOOL_LABELS[event.name] || event.name;

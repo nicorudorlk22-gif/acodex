@@ -176,6 +176,49 @@
       background: var(--error-text-color, #d93025);
     }
   }
+
+  .ai-mic {
+    background: transparent;
+    border: 1px solid var(--border-color, rgba(122, 122, 122, 0.3));
+    color: var(--primary-text-color, inherit);
+
+    &.listening {
+      background: var(--error-text-color, #d93025);
+      border-color: transparent;
+      color: var(--button-text-color, #fff);
+      animation: ai-mic-pulse 1.4s ease-in-out infinite;
+    }
+  }
+
+  .ai-voice-hint {
+    max-height: 0;
+    overflow: hidden;
+    font-size: 0.75em;
+    color: var(--secondary-text-color, #999);
+    padding: 0 10px;
+    opacity: 0;
+    transition: max-height 0.2s ease, opacity 0.2s ease;
+
+    &.visible {
+      max-height: 60px;
+      opacity: 1;
+      padding-bottom: 8px;
+    }
+
+    &.error {
+      color: var(--error-text-color, #d93025);
+    }
+  }
+}
+
+@keyframes ai-mic-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
 }
 
   /* refinamentos */

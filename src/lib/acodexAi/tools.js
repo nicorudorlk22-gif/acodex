@@ -23,6 +23,8 @@ export const BLOCKED_COMMANDS = new Set([
  * @property {(command: string, arg?: any) => any} execCommand
  * @property {() => string[]} listCommands
  * @property {(title: string, message: string) => Promise<boolean>} confirm
+ * @property {{ has: (name: string) => boolean, get: (name: string) => any|null, skills: any[] }} [skills]
+ *        Optional skill registry (see lib/acodexAi/skills.js). When present, adds the list_skills and load_skill tools.
  */
 
 /**
@@ -249,6 +251,48 @@ export function createToolRegistry(deps) {
 				}
 				await deps.execCommand(command);
 				return { ok: true };
+			},
+		},
+		list_skills: {
+			description:
+				"List the available Acodex AI skills (reusable task playbooks) with their names and descriptions.",
+			parameters: { type: "object", properties: {} },
+			run() {
+				if (!deps.skills) return { error: "Skills are not available." };
+				return {
+					skills: deps.skills.skills.map((skill) => ({
+						name: skill.name,
+						description: skill.description,
+					})),
+				};
+			},
+		},
+		load_skill: {
+			description:
+				"Load the full instructions of a skill by name. Call this before applying a skill and follow its instructions exactly.",
+			parameters: {
+				type: "object",
+				properties: {
+					name: {
+						type: "string",
+						description: "Skill name, as returned by list_skills.",
+					},
+				},
+				required: ["name"],
+			},
+			run({ name }) {
+				if (!deps.skills) return { error: "Skills are not available." };
+				if (!deps.skills.has(name)) {
+					return {
+						error: `Unknown skill "${name}". Call list_skills for the catalog.`,
+					};
+				}
+				const skill = deps.skills.get(name);
+				return {
+					name: skill.name,
+					description: skill.description,
+					instructions: skill.instructions,
+				};
 			},
 		},
 	};
