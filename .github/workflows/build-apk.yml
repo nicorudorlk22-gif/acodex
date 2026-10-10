@@ -38,6 +38,12 @@ jobs:
           node-version: "lts/*"
           cache: "npm"
 
+      - name: Cache debug keystore (assinatura fixa entre builds)
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: acodex-debug-keystore-v1
+
       - name: Install Cordova + dependencies
         run: |
           npm install
